@@ -75,7 +75,29 @@ func getLastChar(walker *_ReverseRuneWalker) string {
 		return getLastChar(walker) + INVALID
 	}
 
-	if char, ok := basicTable[walker.Rune]; ok {
+	if entry, ok := maitresLectionesTable[current]; ok {
+		if !walk(walker) {
+			return getBasic(current)
+		}
+
+		if char, ok := entry[walker.Rune]; ok {
+			return char
+		}
+
+		return getLastChar(walker) + getBasic(current)
+	}
+
+	if char, ok := basicTable[current]; ok {
+		return char
+	}
+
+	// return string(walker.Rune)
+	// return fmt.Sprintf("<\\u%04x>", walker.Rune)
+	return ""
+}
+
+func getBasic(r rune) string {
+	if char, ok := basicTable[r]; ok {
 		return char
 	}
 

@@ -58,12 +58,12 @@ var basicTable = map[rune]string{
 }
 
 var dageshTable = map[rune]string{
-	'ב': "ḇ",
-	'ג': "ḡ",
-	'ד': "ḏ",
-	'כ': "ḵ",
-	'פ': "p̄",
-	'ת': "p̄",
+	'ב': "b",
+	'ג': "g",
+	'ד': "d",
+	'כ': "k",
+	'פ': "p",
+	'ת': "t",
 }
 
 var shinTable = map[rune]string{
