@@ -19,6 +19,7 @@ func TestAcademic_Simple(t *testing.T) {
 		"וְאֵ֥ת":       "w'ʾēṯ",
 		"הָאָֽרֶץ׃":    "hāʾāreṣ",
 		"תֹ֙הוּ֙":      "ṯohû",
+		"א֑וֹר":        "ʾôr",
 	}
 
 	for word, expected := range testData {
