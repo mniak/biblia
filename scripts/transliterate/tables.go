@@ -46,10 +46,10 @@ var basicTable = map[rune]string{
 	// Vowels
 	QAMATS:   "ā",
 	PATAH:    "a",
-	SEGOL:    "ę",
-	TSERE:    "e",
+	SEGOL:    "e",
+	TSERE:    "ē",
 	HIRIK:    "i",
-	HOLAM:    "ō",
+	HOLAM:    "o",
 	QUBUTS:   "u",
 	SHEVA:    "'",
 	'\u05b2': "ă", // HATAF_PATAH

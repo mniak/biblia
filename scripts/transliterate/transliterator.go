@@ -60,7 +60,7 @@ func getLastChar(walker *_ReverseRuneWalker) string {
 			return char
 		}
 		char := getLastChar(walker)
-		return char //+ char
+		return char + char
 	}
 
 	if current == '\u05c2' || current == '\u05c1' {
