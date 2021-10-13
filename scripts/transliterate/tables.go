@@ -84,4 +84,7 @@ var maitresLectionesTable = map[rune]map[rune]string{
 		// HOLAM:     "ô",
 		HOLAM_VAV: "ô",
 	},
+	DAGESH: {
+		'ו': "û",
+	},
 }

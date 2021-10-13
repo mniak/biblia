@@ -48,6 +48,16 @@ func getReverseRunes(bytes []byte) []rune {
 	return runes
 }
 
+func (rw *_RuneWalker) Filter(validFunc func(rune) bool) {
+	filtered := make([]rune, 0, len(rw.runes))
+	for _, r := range rw.runes {
+		if validFunc(r) {
+			filtered = append(filtered, r)
+		}
+	}
+	rw.runes = filtered
+}
+
 func (rw *_RuneWalker) Walk() bool {
 	if rw.cursor+1 == len(rw.runes) {
 		return false
