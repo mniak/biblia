@@ -71,7 +71,6 @@ func (w *_IndentedTextWriter) WriteString(text string) (int, error) {
 	if w.shouldIndentNext {
 		n1, err = w.TextWriter.WriteString(strings.Repeat(" ", w.indentationLevel*w.indentationSize))
 		w.shouldIndentNext = false
-		return n1, err
 	}
 
 	n2, err := w.TextWriter.WriteString(text)
@@ -95,15 +94,22 @@ func shouldIndentAfter(text string) bool {
 	// Source: https://en.wikipedia.org/wiki/Newline#Unicode"
 	switch r {
 	case '\u000a':
+		return true
 	case '\u000b':
+		return true
 	case '\u000c':
+		return true
 	case '\u000d':
+		return true
 	case '\u0085':
+		return true
 	case '\u2028':
+		return true
 	case '\u2029':
 		return true
+	default:
+		return false
 	}
-	return false
 }
 
 func (tw *_IndentedTextWriter) Print(text string) (int, error) {

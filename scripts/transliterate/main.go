@@ -26,7 +26,7 @@ func main() {
 	book := tanach.Tanach.Book
 	w.Printlnf("Book of %s", book.Names.Name)
 	w.Indent()
-	for _, chapter := range book.Chapters[:1] {
+	for _, chapter := range book.Chapters {
 		w.Printlnf("Chapter %d (%d vv.)",
 			chapter.Number,
 			chapter.VerseCount,
@@ -42,6 +42,7 @@ func main() {
 			}
 			w.Println()
 		}
+		w.Println()
 		w.Dedent()
 	}
 	w.Dedent()
