@@ -12,8 +12,8 @@ var academicTransliterator Transliterator = &_Transliterator{}
 func TestAcademic_Simple(t *testing.T) {
 	testData := map[string]string{
 		"בְּרֵאשִׁ֖ית": "b'reʾšîṯ",
-		// "בָּרָ֣א":      "",
-		// "אֱלֹהִ֑ים":    "",
+		"בָּרָ֣א":      "bārāʾ",
+		"אֱלֹהִ֑ים":    "ʾĕlōhîm",
 		// "אֵ֥ת":         "",
 		// "הַשָּׁמַ֖יִם": "",
 		// "וְאֵ֥ת":       "",

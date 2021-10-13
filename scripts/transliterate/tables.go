@@ -49,7 +49,7 @@ var basicTable = map[rune]string{
 	SEGOL:    "ę",
 	TSERE:    "e",
 	HIRIK:    "i",
-	HOLAM:    "o",
+	HOLAM:    "ō",
 	QUBUTS:   "u",
 	SHEVA:    "'",
 	'\u05b2': "ă", // HATAF_PATAH

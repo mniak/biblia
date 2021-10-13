@@ -36,7 +36,8 @@ func main() {
 		for _, verse := range chapter.Verses[:5] {
 			w.Printf("%d: ", verse.Number)
 			for _, word := range verse.Words {
-				w.Print(transliterator.Transliterate(word.Text))
+				word.Text = transliterator.Transliterate(word.Text)
+				w.Print(word.Text)
 				w.Print(" ")
 			}
 			w.Println()
