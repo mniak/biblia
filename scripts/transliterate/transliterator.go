@@ -13,19 +13,8 @@ type _Transliterator struct{}
 func (t *_Transliterator) Transliterate(word string) string {
 	walker := ReverseRuneWalker(word)
 	walker.Filter(func(r rune) bool {
-		if r >= '\u0591' && r <= '\u05ae' { // Accents
-			return false
-		}
-		if r >= '\u05bd' && r <= '\u05c0' { // Some points
-			return false
-		}
-		if r >= '\u05c3' && r <= '\u05c6' { // More points
-			return false
-		}
-		if r == '\ufffd' {
-			return false
-		}
-		return true
+		_, ignored := ignoredSet[r]
+		return !ignored
 	})
 
 	resultChars := make([]string, 0)
@@ -84,17 +73,6 @@ func getLastChar(walker *_RuneWalker) string {
 		return char
 	}
 
-	// return string(walker.Rune)
-	// return fmt.Sprintf("<\\u%04x>", walker.Rune)
-	return ""
-}
-
-func getBasic(r rune) string {
-	if char, ok := basicTable[r]; ok {
-		return char
-	}
-
-	// return string(walker.Rune)
 	// return fmt.Sprintf("<\\u%04x>", walker.Rune)
 	return ""
 }

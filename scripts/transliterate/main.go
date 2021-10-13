@@ -33,7 +33,7 @@ func main() {
 		)
 
 		w.Indent()
-		for _, verse := range chapter.Verses[:5] {
+		for _, verse := range chapter.Verses[:10] {
 			w.Printf("%d: ", verse.Number)
 			for _, word := range verse.Words {
 				word.Text = transliterator.Transliterate(word.Text)
