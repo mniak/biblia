@@ -5,12 +5,12 @@ import (
 )
 
 type Transliterator interface {
-	Transliterate(word string) string
+	TransliterateWord(word string) string
 }
 
 type _Transliterator struct{}
 
-func (t *_Transliterator) Transliterate(word string) string {
+func (t *_Transliterator) TransliterateWord(word string) string {
 	walker := ReverseRuneWalker(word)
 	walker.Filter(func(r rune) bool {
 		_, ignored := ignoredSet[r]
@@ -73,6 +73,7 @@ func getLastChar(walker *_RuneWalker) string {
 		return char
 	}
 
+	// return string(walker.Rune)
 	// return fmt.Sprintf("<\\u%04x>", walker.Rune)
 	return ""
 }

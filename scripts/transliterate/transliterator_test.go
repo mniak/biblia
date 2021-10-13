@@ -23,8 +23,8 @@ func TestAcademic_Simple(t *testing.T) {
 	}
 
 	for word, expected := range testData {
-		t.Run(fmt.Sprintf("'%s' -> '%s'", word, expected), func(t *testing.T) {
-			actual := academicTransliterator.Transliterate(word)
+		t.Run(fmt.Sprintf("'%s'→'%s'", word, expected), func(t *testing.T) {
+			actual := academicTransliterator.TransliterateWord(word)
 
 			assert.Equal(t, expected, actual)
 		})
