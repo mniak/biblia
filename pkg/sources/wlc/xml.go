@@ -1,8 +1,45 @@
-package tanach
+package wlc
 
 import "encoding/xml"
 
-type Tanach struct {
+type TanachChapter struct {
+	Text   string `xml:",chardata"`
+	Number int    `xml:"n,attr"`
+	Verses []struct {
+		Text   string `xml:",chardata"`
+		Number int    `xml:"n,attr"`
+		Words  []struct {
+			Text string `xml:",chardata"`
+			X    string `xml:"x"`
+		} `xml:"w"`
+		Pe     string   `xml:"pe"`
+		Samekh string   `xml:"samekh"`
+		K      []string `xml:"k"`
+		Q      []string `xml:"q"`
+	} `xml:"v"`
+	VerseCount int `xml:"vs"`
+}
+type TanachBook struct {
+	Text  string `xml:",chardata"`
+	Names struct {
+		Text       string `xml:",chardata"`
+		Name       string `xml:"name"`
+		Abbrev     string `xml:"abbrev"`
+		Number     string `xml:"number"`
+		Filename   string `xml:"filename"`
+		Hebrewname string `xml:"hebrewname"`
+	} `xml:"names"`
+	Chapters []TanachChapter `xml:"c"`
+	Vs       string          `xml:"vs"`
+	Cs       string          `xml:"cs"`
+}
+
+type TanachRoot struct {
+	Text string     `xml:",chardata"`
+	Book TanachBook `xml:"book"`
+}
+
+type TanachFile struct {
 	XMLName                   xml.Name `xml:"Tanach"`
 	Text                      string   `xml:",chardata"`
 	Xsi                       string   `xml:"xsi,attr"`
@@ -104,40 +141,8 @@ type Tanach struct {
 			} `xml:"langUsage"`
 		} `xml:"profileDesc"`
 	} `xml:"teiHeader"`
-	Tanach struct {
-		Text string `xml:",chardata"`
-		Book struct {
-			Text  string `xml:",chardata"`
-			Names struct {
-				Text       string `xml:",chardata"`
-				Name       string `xml:"name"`
-				Abbrev     string `xml:"abbrev"`
-				Number     string `xml:"number"`
-				Filename   string `xml:"filename"`
-				Hebrewname string `xml:"hebrewname"`
-			} `xml:"names"`
-			Chapters []struct {
-				Text   string `xml:",chardata"`
-				Number int    `xml:"n,attr"`
-				Verses []struct {
-					Text   string `xml:",chardata"`
-					Number int    `xml:"n,attr"`
-					Words  []struct {
-						Text string `xml:",chardata"`
-						X    string `xml:"x"`
-					} `xml:"w"`
-					Pe     string   `xml:"pe"`
-					Samekh string   `xml:"samekh"`
-					K      []string `xml:"k"`
-					Q      []string `xml:"q"`
-				} `xml:"v"`
-				VerseCount int `xml:"vs"`
-			} `xml:"c"`
-			Vs string `xml:"vs"`
-			Cs string `xml:"cs"`
-		} `xml:"book"`
-	} `xml:"tanach"`
-	Notes struct {
+	Tanach TanachRoot `xml:"tanach"`
+	Notes  struct {
 		Text string `xml:",chardata"`
 		Note []struct {
 			Text   string `xml:",chardata"`

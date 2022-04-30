@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/mniak/biblia/pkg/formats/tanach"
 	"github.com/mniak/biblia/pkg/hebrew"
+	"github.com/mniak/biblia/pkg/sources/wlc"
 	"github.com/mniak/biblia/pkg/text"
 )
 
@@ -23,7 +23,7 @@ func main() {
 	w := text.NewIndentedStdout()
 	transliterator := hebrew.NewAcademicTransliterator()
 
-	var tanach tanach.Tanach
+	var tanach wlc.TanachFile
 	err = xml.Unmarshal(data, &tanach)
 	handle(err)
 
