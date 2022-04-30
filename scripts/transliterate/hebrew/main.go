@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"github.com/mniak/biblia/pkg/formats/tanach"
+	"github.com/mniak/biblia/pkg/hebrew"
+	"github.com/mniak/biblia/pkg/text"
 )
 
 func handle(err error) {
@@ -18,8 +20,8 @@ func main() {
 	data, err := os.ReadFile("base/UnicodeXML_Westminster_Leningrad_Codex/Tanach/Genesis.xml")
 	handle(err)
 
-	w := NewIndentedStdout()
-	transliterator := _Transliterator{}
+	w := text.NewIndentedStdout()
+	transliterator := hebrew.StandardHebrewTransliterator()
 
 	var tanach tanach.Tanach
 	err = xml.Unmarshal(data, &tanach)

@@ -1,3 +1,3 @@
 package export
 
-type name struct{}
+type BibleChapterFile struct{}

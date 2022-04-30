@@ -1,26 +1,31 @@
-package main
+package runeutils
 
 import "unicode/utf8"
 
+type RuneWalker interface {
+	Rune() rune
+	Walk() bool
+	WalkBack() bool
+}
+
 type _RuneWalker struct {
-	Rune rune
-
-	runes  []rune
-	cursor int
+	current rune
+	runes   []rune
+	cursor  int
 }
 
-func RuneWalker(text string) _RuneWalker {
+func NewRuneWalker(text string) *_RuneWalker {
 	runes := getRunes([]byte(text))
-	return RuneWalkerFromRunes(runes)
+	return NewRuneWalkerFromRunes(runes)
 }
 
-func ReverseRuneWalker(text string) _RuneWalker {
+func NewReverseRuneWalker(text string) *_RuneWalker {
 	runes := getReverseRunes([]byte(text))
-	return RuneWalkerFromRunes(runes)
+	return NewRuneWalkerFromRunes(runes)
 }
 
-func RuneWalkerFromRunes(runes []rune) _RuneWalker {
-	return _RuneWalker{
+func NewRuneWalkerFromRunes(runes []rune) *_RuneWalker {
+	return &_RuneWalker{
 		runes:  runes,
 		cursor: -1,
 	}
@@ -48,6 +53,10 @@ func getReverseRunes(bytes []byte) []rune {
 	return runes
 }
 
+func (rw *_RuneWalker) Rune() rune {
+	return rw.current
+}
+
 func (rw *_RuneWalker) Filter(validFunc func(rune) bool) {
 	filtered := make([]rune, 0, len(rw.runes))
 	for _, r := range rw.runes {
@@ -63,7 +72,7 @@ func (rw *_RuneWalker) Walk() bool {
 		return false
 	}
 	rw.cursor++
-	rw.Rune = rw.runes[rw.cursor]
+	rw.current = rw.runes[rw.cursor]
 	return true
 }
 
@@ -72,6 +81,6 @@ func (rw *_RuneWalker) WalkBack() bool {
 		return false
 	}
 	rw.cursor--
-	rw.Rune = rw.runes[rw.cursor]
+	rw.current = rw.runes[rw.cursor]
 	return true
 }

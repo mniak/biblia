@@ -1,4 +1,4 @@
-package main
+package runeutils
 
 type RuneStack struct {
 	stack []rune

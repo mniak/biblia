@@ -1,7 +1,9 @@
-package main
+package hebrew
 
 import (
 	"strings"
+
+	"github.com/mniak/biblia/pkg/runeutils"
 )
 
 type Transliterator interface {
@@ -10,8 +12,12 @@ type Transliterator interface {
 
 type _Transliterator struct{}
 
+func StandardHebrewTransliterator() _Transliterator {
+	return _Transliterator{}
+}
+
 func (t *_Transliterator) TransliterateWord(word string) string {
-	walker := ReverseRuneWalker(word)
+	walker := runeutils.NewReverseRuneWalker(word)
 	walker.Filter(func(r rune) bool {
 		_, ignored := ignoredSet[r]
 		return !ignored
@@ -19,7 +25,7 @@ func (t *_Transliterator) TransliterateWord(word string) string {
 
 	resultChars := make([]string, 0)
 	for walker.Walk() {
-		resultChars = append(resultChars, getLastChar(&walker))
+		resultChars = append(resultChars, getLastChar(walker))
 	}
 
 	var sb strings.Builder
@@ -29,13 +35,13 @@ func (t *_Transliterator) TransliterateWord(word string) string {
 	return sb.String()
 }
 
-func getLastChar(walker *_RuneWalker) string {
-	current := walker.Rune
+func getLastChar(walker runeutils.RuneWalker) string {
+	current := walker.Rune()
 
 	// Maitres lectiones
 	if entry, ok := maitresLectionesTable[current]; ok {
 		if walker.Walk() {
-			if char, ok := entry[walker.Rune]; ok {
+			if char, ok := entry[walker.Rune()]; ok {
 				return char
 			}
 
@@ -49,7 +55,7 @@ func getLastChar(walker *_RuneWalker) string {
 			return INVALID
 		}
 
-		if char, ok := dageshTable[walker.Rune]; ok {
+		if char, ok := dageshTable[walker.Rune()]; ok {
 			return char
 		}
 		char := getLastChar(walker)
@@ -62,7 +68,7 @@ func getLastChar(walker *_RuneWalker) string {
 			return INVALID
 		}
 
-		if walker.Rune == 'ש' {
+		if walker.Rune() == 'ש' {
 			return shinTable[current]
 		}
 

@@ -1,4 +1,4 @@
-package main
+package runeutils
 
 import (
 	"testing"
@@ -6,11 +6,17 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	_ RuneWalker = NewRuneWalker("")
+	_ RuneWalker = NewReverseRuneWalker("")
+	_ RuneWalker = NewRuneWalkerFromRunes([]rune{})
+)
+
 func TestRuneWalker(t *testing.T) {
 	word := "1234"
-	sut := RuneWalker(word)
+	sut := NewRuneWalker(word)
 
-	sut.Rune = 0
+	// sut.Rune = 0
 	require.True(t, sut.Walk())
 	require.Equal(t, '1', sut.Rune)
 
@@ -39,9 +45,9 @@ func TestRuneWalker(t *testing.T) {
 
 func TestReverseRuneWalker(t *testing.T) {
 	word := "4321"
-	sut := ReverseRuneWalker(word)
+	sut := NewReverseRuneWalker(word)
 
-	sut.Rune = 0
+	// sut.Rune = 0
 	require.True(t, sut.Walk())
 	require.Equal(t, '1', sut.Rune)
 
