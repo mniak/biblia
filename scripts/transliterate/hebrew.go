@@ -21,7 +21,7 @@ func main() {
 	handle(err)
 
 	w := text.NewIndentedStdout()
-	transliterator := hebrew.StandardHebrewTransliterator()
+	transliterator := hebrew.NewAcademicTransliterator()
 
 	var tanach tanach.Tanach
 	err = xml.Unmarshal(data, &tanach)

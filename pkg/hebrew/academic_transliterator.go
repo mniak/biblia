@@ -6,17 +6,13 @@ import (
 	"github.com/mniak/biblia/pkg/runeutils"
 )
 
-type Transliterator interface {
-	TransliterateWord(word string) string
+type academicTransliterator struct{}
+
+func NewAcademicTransliterator() *academicTransliterator {
+	return &academicTransliterator{}
 }
 
-type _Transliterator struct{}
-
-func StandardHebrewTransliterator() _Transliterator {
-	return _Transliterator{}
-}
-
-func (t *_Transliterator) TransliterateWord(word string) string {
+func (t *academicTransliterator) TransliterateWord(word string) string {
 	walker := runeutils.NewReverseRuneWalker(word)
 	walker.Filter(func(r rune) bool {
 		_, ignored := ignoredSet[r]

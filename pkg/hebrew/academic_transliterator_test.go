@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/mniak/biblia/pkg/bible"
 	"github.com/stretchr/testify/assert"
 )
 
-var academicTransliterator Transliterator = &_Transliterator{}
+var _ bible.Transliterator = NewAcademicTransliterator()
 
 func TestAcademic_Simple(t *testing.T) {
 	testData := map[string]string{
@@ -22,9 +23,11 @@ func TestAcademic_Simple(t *testing.T) {
 		"א֑וֹר":        "ʾôr",
 	}
 
+	transliterator := NewAcademicTransliterator()
+
 	for word, expected := range testData {
 		t.Run(fmt.Sprintf("'%s'→'%s'", word, expected), func(t *testing.T) {
-			actual := academicTransliterator.TransliterateWord(word)
+			actual := transliterator.TransliterateWord(word)
 
 			assert.Equal(t, expected, actual)
 		})
