@@ -1,4 +1,4 @@
-module github.com/mniak/biblia/scripts/transliterate
+module github.com/mniak/biblia
 
 go 1.16
 
