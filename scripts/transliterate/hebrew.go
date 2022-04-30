@@ -17,7 +17,7 @@ func handle(err error) {
 }
 
 func main() {
-	data, err := os.ReadFile("base/UnicodeXML_Westminster_Leningrad_Codex/Tanach/Genesis.xml")
+	data, err := os.ReadFile("sources/UnicodeXML_Westminster_Leningrad_Codex/Tanach/Genesis.xml")
 	handle(err)
 
 	w := text.NewIndentedStdout()
