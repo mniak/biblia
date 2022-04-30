@@ -4,6 +4,8 @@ import (
 	"encoding/xml"
 	"log"
 	"os"
+
+	"github.com/mniak/biblia/pkg/formats/tanach"
 )
 
 func handle(err error) {
@@ -19,7 +21,7 @@ func main() {
 	w := NewIndentedStdout()
 	transliterator := _Transliterator{}
 
-	var tanach Tanach
+	var tanach tanach.Tanach
 	err = xml.Unmarshal(data, &tanach)
 	handle(err)
 
