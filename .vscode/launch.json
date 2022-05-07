@@ -10,7 +10,10 @@
             "request": "launch",
             "mode": "auto",
             "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/scripts/transliterate/hebrew.go"
+            "program": "${workspaceFolder}/cmd/transliterate",
+            "args": [
+                "ot",
+            ]
         }
     ]
 }

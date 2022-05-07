@@ -1,6 +1,7 @@
 package bible
 
 type Chapter struct {
+	Number int
 	Verses []Verse
 }
 

@@ -2,22 +2,26 @@ package wlc
 
 import "encoding/xml"
 
+type TanachWord struct {
+	Text string `xml:",chardata"`
+	X    string `xml:"x"`
+}
+
+type TanachVerse struct {
+	Text   string       `xml:",chardata"`
+	Number int          `xml:"n,attr"`
+	Words  []TanachWord `xml:"w"`
+	Pe     string       `xml:"pe"`
+	Samekh string       `xml:"samekh"`
+	K      []string     `xml:"k"`
+	Q      []string     `xml:"q"`
+}
+
 type TanachChapter struct {
-	Text   string `xml:",chardata"`
-	Number int    `xml:"n,attr"`
-	Verses []struct {
-		Text   string `xml:",chardata"`
-		Number int    `xml:"n,attr"`
-		Words  []struct {
-			Text string `xml:",chardata"`
-			X    string `xml:"x"`
-		} `xml:"w"`
-		Pe     string   `xml:"pe"`
-		Samekh string   `xml:"samekh"`
-		K      []string `xml:"k"`
-		Q      []string `xml:"q"`
-	} `xml:"v"`
-	VerseCount int `xml:"vs"`
+	Text       string        `xml:",chardata"`
+	Number     int           `xml:"n,attr"`
+	Verses     []TanachVerse `xml:"v"`
+	VerseCount int           `xml:"vs"`
 }
 type TanachBook struct {
 	Text  string `xml:",chardata"`

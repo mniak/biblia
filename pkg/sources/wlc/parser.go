@@ -32,16 +32,30 @@ func ParseBook(data []byte) (bible.Book, error) {
 	if err != nil {
 		return bible.Book{}, err
 	}
-	tanachBook := tanachFile.Tanach.Book
-	book := bible.Book{
-		Name:     tanachBook.Names.Name,
-		Chapters: lo.Map(tanachBook.Chapters, convertChapter),
-	}
-	return book, nil
+	return convertBook(tanachFile.Tanach.Book), nil
 }
 
-func convertChapter(ch TanachChapter, i int) bible.Chapter {
-	return bible.Chapter{
-		Verses: lo.Map[](),
+func convertBook(book TanachBook) bible.Book {
+	return bible.Book{
+		Name:     book.Names.Name,
+		Chapters: lo.Map(book.Chapters, convertChapter),
 	}
+}
+
+func convertChapter(chapter TanachChapter, i int) bible.Chapter {
+	return bible.Chapter{
+		Number: chapter.Number,
+		Verses: lo.Map(chapter.Verses, convertVerse),
+	}
+}
+
+func convertVerse(verse TanachVerse, i int) bible.Verse {
+	return bible.Verse{
+		Number: verse.Number,
+		Words:  lo.Map(verse.Words, convertWord),
+	}
+}
+
+func convertWord(word TanachWord, i int) string {
+	return word.Text
 }

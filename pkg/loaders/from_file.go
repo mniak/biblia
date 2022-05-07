@@ -1,21 +1,29 @@
 package loaders
 
 import (
-	"encoding/xml"
+	"fmt"
 	"os"
+	"path/filepath"
 
+	"github.com/mniak/biblia/internal/utils"
 	"github.com/mniak/biblia/pkg/bible"
+	"github.com/mniak/biblia/pkg/sources/wlc"
 )
 
-func LoadWestminsterLeningradCodex() (bible.Testament, error) {
-	bookBytes, err := os.ReadFile("sources/UnicodeXML_Westminster_Leningrad_Codex/Tanach/Genesis.xml")
-	if err != nil {
-		return bible.Testament{}, err
-	}
+type WLCLoader struct {
+	Directory string
+}
 
-	err = xml.Unmarshal(data, &tanach)
+func (l WLCLoader) Load() (bible.Testament, error) {
+	books, err := utils.MapErr(wlc.BookNames(), func(bookname string) (bible.Book, error) {
+		bookBytes, err := os.ReadFile(filepath.Join(l.Directory, fmt.Sprintf("%s.xml", bookname)))
+		if err != nil {
+			return bible.Book{}, err
+		}
+		return wlc.ParseBook(bookBytes)
+	})
 
 	return bible.Testament{
-		// Books: ,
-	}, nil
+		Books: books,
+	}, err
 }

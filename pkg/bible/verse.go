@@ -1,7 +1,8 @@
 package bible
 
 type Verse struct {
-	Words []string
+	Number int
+	Words  []string
 }
 
 func (b Verse) Transliterate(t Transliterator) Verse {
