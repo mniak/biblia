@@ -2,17 +2,21 @@ package wlc
 
 func BookNames() []string {
 	return []string{
+		// Torah
+		"Genesis",
+		"Exodus",
+		"Leviticus",
+		"Numbers",
+		"Deuteronomy",
+
 		"Amos",
 		"Chronicles_1",
 		"Chronicles_2",
 		"Daniel",
-		"Deuteronomy",
 		"Ecclesiastes",
 		"Esther",
-		"Exodus",
 		"Ezekiel",
 		"Ezra",
-		"Genesis",
 		"Habakkuk",
 		"Haggai",
 		"Hosea",
@@ -26,12 +30,10 @@ func BookNames() []string {
 		"Kings_1",
 		"Kings_2",
 		"Lamentations",
-		"Leviticus",
 		"Malachi",
 		"Micah",
 		"Nahum",
 		"Nehemiah",
-		"Numbers",
 		"Obadiah",
 		"Proverbs",
 		"Psalms",
