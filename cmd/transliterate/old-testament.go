@@ -5,7 +5,7 @@ import (
 
 	"github.com/mniak/biblia/pkg/bible"
 	"github.com/mniak/biblia/pkg/hebrew"
-	"github.com/mniak/biblia/pkg/sources/wlc"
+	"github.com/mniak/biblia/pkg/wlc"
 	"github.com/spf13/cobra"
 )
 

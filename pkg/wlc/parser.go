@@ -9,7 +9,7 @@ import (
 	"github.com/samber/lo"
 )
 
-func ParseAllBooks(directory string) (bible.Testament, error) {
+func parseAllBooks(directory string) (bible.Testament, error) {
 	var test bible.Testament
 	for _, bookname := range BookNames() {
 		filename := filepath.Join(directory, bookname+".xml")
