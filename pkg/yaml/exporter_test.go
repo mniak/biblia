@@ -1,4 +1,4 @@
-package text
+package yaml
 
 import "github.com/mniak/biblia/pkg/bible"
 

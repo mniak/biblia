@@ -1,53 +1,21 @@
 package text
 
 import (
-	"fmt"
 	"io"
-	"os"
 	"strings"
 	"unicode/utf8"
 )
 
-func Sprintlnf(w io.StringWriter, template string, data ...interface{}) string {
-	return fmt.Sprintln(
-		fmt.Sprintf(template, data...),
-	)
-}
-
-func Tprintf(tw TextWriter, template string, data ...interface{}) (int, error) {
-	return tw.WriteString(
-		fmt.Sprintf(template, data...),
-	)
-}
-
-func Tprintln(tw TextWriter, text ...interface{}) (int, error) {
-	return tw.WriteString(
-		fmt.Sprintln(text...),
-	)
-}
-
-func Tprintlnf(tw TextWriter, template string, data ...interface{}) (int, error) {
-	return Tprintln(tw,
-		fmt.Sprintf(template, data...),
-	)
-}
-
-type TextWriter io.StringWriter
-
-func NewIndentedWriter(textWriter TextWriter) *_IndentedTextWriter {
+func newAutoIndentWriter(w io.StringWriter) *_IndentedTextWriter {
 	return &_IndentedTextWriter{
-		TextWriter:       textWriter,
+		inner:            basicWriter{w},
 		indentationSize:  2,
 		shouldIndentNext: true,
 	}
 }
 
-func NewIndentedStdout() *_IndentedTextWriter {
-	return NewIndentedWriter(os.Stdout)
-}
-
 type _IndentedTextWriter struct {
-	TextWriter
+	inner           basicWriter
 	indentationSize int
 
 	indentationLevel int
@@ -69,11 +37,11 @@ func (w *_IndentedTextWriter) WriteString(text string) (int, error) {
 	var err error
 
 	if w.shouldIndentNext {
-		n1, err = w.TextWriter.WriteString(strings.Repeat(" ", w.indentationLevel*w.indentationSize))
+		n1, err = w.inner.WriteString(strings.Repeat(" ", w.indentationLevel*w.indentationSize))
 		w.shouldIndentNext = false
 	}
 
-	n2, err := w.TextWriter.WriteString(text)
+	n2, err := w.inner.WriteString(text)
 
 	w.shouldIndentNext = shouldIndentAfter(text)
 	return n1 + n2, err
@@ -117,13 +85,9 @@ func (tw *_IndentedTextWriter) Print(text string) (int, error) {
 }
 
 func (tw *_IndentedTextWriter) Printf(template string, data ...interface{}) (int, error) {
-	return Tprintf(tw, template, data...)
+	return tw.inner.Printf(template, data...)
 }
 
 func (tw *_IndentedTextWriter) Println(text ...interface{}) (int, error) {
-	return Tprintln(tw, text...)
-}
-
-func (tw *_IndentedTextWriter) Printlnf(template string, data ...interface{}) (int, error) {
-	return Tprintlnf(tw, template, data...)
+	return tw.inner.Println(text...)
 }

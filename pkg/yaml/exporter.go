@@ -1,4 +1,4 @@
-package text
+package yaml
 
 import (
 	"embed"
@@ -11,14 +11,14 @@ import (
 	"github.com/mniak/biblia/pkg/bible"
 )
 
-//go:embed yaml_exporter_verse.tmpl
+//go:embed verse.yaml.tmpl
 var embedfs embed.FS
 
 type yamlExporter struct {
 	directory string
 }
 
-func YamlExporter(directory string) yamlExporter {
+func NewExporter(directory string) yamlExporter {
 	return yamlExporter{
 		directory: directory,
 	}
@@ -44,7 +44,7 @@ func (e yamlExporter) Export(t bible.Testament) error {
 				}
 				defer w.Close()
 
-				verseTemplate, err := template.ParseFS(embedfs, "yaml_exporter_verse.tmpl")
+				verseTemplate, err := template.ParseFS(embedfs, "verse.yaml.tmpl")
 				if err != nil {
 					return err
 				}

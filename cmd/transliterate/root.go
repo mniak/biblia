@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/mniak/biblia/pkg/bible"
 	"github.com/mniak/biblia/pkg/text"
+	"github.com/mniak/biblia/pkg/yaml"
 	"github.com/spf13/cobra"
 )
 
@@ -14,9 +16,9 @@ var rootCmd = cobra.Command{
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		switch exporterFlag {
 		case "stdout":
-			exporter = text.StdoutExporter()
+			exporter = text.NewExporter(os.Stdout)
 		case "yaml":
-			exporter = text.YamlExporter(outputDirFlag)
+			exporter = yaml.NewExporter(outputDirFlag)
 		default:
 			return fmt.Errorf("invalid exporter: %s", exporterFlag)
 		}
