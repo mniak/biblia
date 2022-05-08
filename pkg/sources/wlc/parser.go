@@ -56,6 +56,8 @@ func convertVerse(verse TanachVerse, i int) bible.Verse {
 	}
 }
 
-func convertWord(word TanachWord, i int) string {
-	return word.Text
+func convertWord(word TanachWord, i int) bible.Word {
+	return bible.Word{
+		Text: word.Text,
+	}
 }

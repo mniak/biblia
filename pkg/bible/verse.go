@@ -2,12 +2,12 @@ package bible
 
 type Verse struct {
 	Number int
-	Words  []string
+	Words  []Word
 }
 
 func (b Verse) Transliterate(t Transliterator) Verse {
 	for idx, word := range b.Words {
-		b.Words[idx] = t.TransliterateWord(word)
+		b.Words[idx].Transliterated = t.TransliterateWord(word.Text)
 	}
 	return b
 }

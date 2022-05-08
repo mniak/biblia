@@ -15,8 +15,8 @@ var rootCmd = cobra.Command{
 		switch exporterFlag {
 		case "stdout":
 			exporter = text.StdoutExporter()
-		case "txt":
-			exporter = text.TxtExporter(outputDirFlag)
+		case "yaml":
+			exporter = text.YamlExporter(outputDirFlag)
 		default:
 			return fmt.Errorf("invalid exporter: %s", exporterFlag)
 		}

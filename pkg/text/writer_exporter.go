@@ -36,7 +36,7 @@ func (e writerExporter) Export(t bible.Testament) error {
 			for _, verse := range chapter.Verses {
 				_, err = w.Printf("%d: ", verse.Number)
 				for _, word := range verse.Words {
-					w.Print(word)
+					w.Print(word.Transliterated)
 					w.Print(" ")
 				}
 				if err != nil {

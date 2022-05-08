@@ -1,10 +1,10 @@
----
 book_name: "{{ .Book.Name }}"
 chapter: {{ .Chapter.Number }}
----
-
-- original: "brsht"
+verse: {{ .Verse.Number }}
+words: {{ range .Verse.Words }}
+- text: "{{ .Text }}"
   romanized: "bereshit"
   translated:
     pt: "no princípio"
     en: "in the beginning"
+{{ end }}
