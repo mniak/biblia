@@ -1,6 +1,7 @@
 package text
 
 import (
+	"embed"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,6 +10,9 @@ import (
 
 	"github.com/mniak/biblia/pkg/bible"
 )
+
+//go:embed chapter_template.tmpl
+var embedfs embed.FS
 
 type txtExporter struct {
 	directory string
@@ -21,16 +25,16 @@ func TxtExporter(directory string) txtExporter {
 }
 
 func (e txtExporter) Export(t bible.Testament) error {
-	chapterTemplate, err := template.New("chapter").Parse(``)
+	chapterTemplate, err := template.ParseFS(embedfs, "chapter_template.tmpl")
 	if err != nil {
 		return err
 	}
 
 	for _, book := range t.Books {
-		for _, chapter := range book.Chapters {
+		normalizedBookName := strings.ReplaceAll(book.Name, " ", "_")
+		dirname := filepath.Join(e.directory, normalizedBookName)
 
-			normalizedBookName := strings.ReplaceAll(book.Name, " ", "_")
-			dirname := filepath.Join(e.directory, normalizedBookName)
+		for _, chapter := range book.Chapters {
 
 			err := os.MkdirAll(dirname, os.ModePerm)
 			if err != nil {
@@ -42,7 +46,10 @@ func (e txtExporter) Export(t bible.Testament) error {
 				return err
 			}
 
-			err = chapterTemplate.Execute(chapterWriter, nil)
+			err = chapterTemplate.Execute(chapterWriter, map[string]any{
+				"Book":    book,
+				"Chapter": chapter,
+			})
 			if err != nil {
 				return err
 			}
