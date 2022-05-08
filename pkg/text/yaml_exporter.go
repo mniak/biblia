@@ -11,7 +11,7 @@ import (
 	"github.com/mniak/biblia/pkg/bible"
 )
 
-//go:embed verse_template.tmpl
+//go:embed yaml_exporter_verse.tmpl
 var embedfs embed.FS
 
 type yamlExporter struct {
@@ -25,11 +25,6 @@ func YamlExporter(directory string) yamlExporter {
 }
 
 func (e yamlExporter) Export(t bible.Testament) error {
-	chapterTemplate, err := template.ParseFS(embedfs, "verse_template.tmpl")
-	if err != nil {
-		return err
-	}
-
 	for _, book := range t.Books {
 		normalizedBookName := strings.ReplaceAll(book.Name, " ", "_")
 		bookdir := filepath.Join(e.directory, normalizedBookName)
@@ -43,12 +38,17 @@ func (e yamlExporter) Export(t bible.Testament) error {
 			for _, verse := range chapter.Verses {
 
 				versepath := filepath.Join(chapterdir, fmt.Sprintf("%s_%d_%d.yaml", normalizedBookName, chapter.Number, verse.Number))
-				chapterWriter, err := os.Create(versepath)
+				w, err := os.Create(versepath)
 				if err != nil {
 					return err
 				}
+				defer w.Close()
 
-				err = chapterTemplate.Execute(chapterWriter, map[string]any{
+				verseTemplate, err := template.ParseFS(embedfs, "yaml_exporter_verse.tmpl")
+				if err != nil {
+					return err
+				}
+				err = verseTemplate.Execute(w, map[string]any{
 					"Book":    book,
 					"Chapter": chapter,
 					"Verse":   verse,

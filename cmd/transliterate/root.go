@@ -46,8 +46,8 @@ func main() {
 	rootCmd.AddCommand(&oldTestamentCmd)
 	rootCmd.AddCommand(&newTestamentCmd)
 
-	rootCmd.PersistentFlags().StringVarP(&exporterFlag, "exporter", "e", "stdout", "The exporter to use (options: stdout)")
-	rootCmd.PersistentFlags().StringVarP(&outputDirFlag, "output-dir", "o", "./dist", "Output directory")
+	rootCmd.PersistentFlags().StringVarP(&exporterFlag, "output", "o", "stdout", "The output format/exporter (options: stdout)")
+	rootCmd.PersistentFlags().StringVarP(&outputDirFlag, "dir", "d", "./export", "Output directory")
 
 	rootCmd.Execute()
 }

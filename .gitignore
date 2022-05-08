@@ -16,4 +16,5 @@
 
 *.exe
 
+export/
 dist/

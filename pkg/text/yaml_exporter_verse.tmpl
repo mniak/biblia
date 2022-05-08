@@ -3,8 +3,5 @@ chapter: {{ .Chapter.Number }}
 verse: {{ .Verse.Number }}
 words: {{ range .Verse.Words }}
 - text: "{{ .Text }}"
-  romanized: "bereshit"
-  translated:
-    pt: "no princípio"
-    en: "in the beginning"
+  tlit: "{{ .Transliterated }}"
 {{ end }}
