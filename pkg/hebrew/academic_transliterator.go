@@ -8,7 +8,7 @@ import (
 
 type academicTransliterator struct{}
 
-func NewAcademicTransliterator() *academicTransliterator {
+func AcademicTransliterator() *academicTransliterator {
 	return &academicTransliterator{}
 }
 

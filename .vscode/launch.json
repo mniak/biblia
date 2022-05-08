@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Transliterate Hebrew",
+            "name": "Transliterate Hebrew OT",
             "type": "go",
             "request": "launch",
             "mode": "auto",

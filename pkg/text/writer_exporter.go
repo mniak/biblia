@@ -1,16 +1,21 @@
-package exporters
+package text
 
 import (
 	"github.com/mniak/biblia/pkg/bible"
-	"github.com/mniak/biblia/pkg/text"
 )
 
 type WriterExporter struct {
-	Writer text.TextWriter
+	Writer TextWriter
+}
+
+func StdoutExporter() WriterExporter {
+	return WriterExporter{
+		Writer: NewIndentedStdout(),
+	}
 }
 
 func (e WriterExporter) Export(t bible.Testament) error {
-	w := text.NewIndentedWriter(e.Writer)
+	w := NewIndentedWriter(e.Writer)
 
 	for _, book := range t.Books {
 		_, err := w.Printlnf("Book of %s", book.Name)

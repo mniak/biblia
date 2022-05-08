@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var _ bible.Transliterator = NewAcademicTransliterator()
+var _ bible.Transliterator = AcademicTransliterator()
 
 func TestAcademic_Simple(t *testing.T) {
 	testData := map[string]string{
@@ -23,7 +23,7 @@ func TestAcademic_Simple(t *testing.T) {
 		"א֑וֹר":        "ʾôr",
 	}
 
-	transliterator := NewAcademicTransliterator()
+	transliterator := AcademicTransliterator()
 
 	for word, expected := range testData {
 		t.Run(fmt.Sprintf("'%s'→'%s'", word, expected), func(t *testing.T) {
