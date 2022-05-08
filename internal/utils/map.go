@@ -1,5 +1,6 @@
 package utils
 
+// MapErr maps a type to another using a function that can also return an error
 func MapErr[A any, B any](list []A, mapfn func(A) (B, error)) ([]B, error) {
 	result := make([]B, 0)
 	for _, item := range list {

@@ -33,6 +33,7 @@ var (
 	sourceFlag         string
 	transliteratorFlag string
 	exporterFlag       string
+	outputDirFlag      string
 
 	loader         bible.TestamentLoader
 	transliterator bible.Transliterator
@@ -44,6 +45,7 @@ func main() {
 	rootCmd.AddCommand(&newTestamentCmd)
 
 	rootCmd.PersistentFlags().StringVarP(&exporterFlag, "exporter", "e", "stdout", "The exporter to use (options: stdout)")
+	rootCmd.PersistentFlags().StringVarP(&outputDirFlag, "output-dir", "o", "./dist", "Output directory")
 
 	rootCmd.Execute()
 }

@@ -3,7 +3,7 @@ package hebrew
 import (
 	"strings"
 
-	"github.com/mniak/biblia/pkg/runeutils"
+	"github.com/mniak/biblia/internal/runeutils"
 )
 
 type academicTransliterator struct{}
@@ -13,7 +13,7 @@ func AcademicTransliterator() *academicTransliterator {
 }
 
 func (t *academicTransliterator) TransliterateWord(word string) string {
-	walker := runeutils.NewReverseRuneWalker(word)
+	walker := runeutils.ReverseRuneWalker(word)
 	walker.Filter(func(r rune) bool {
 		_, ignored := ignoredSet[r]
 		return !ignored
