@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/mniak/biblia/pkg/bible"
 	"github.com/spf13/cobra"
 )
 
@@ -16,9 +17,17 @@ func handle(err error) {
 	}
 }
 
+var (
+	sourceFlag         string
+	transliteratorFlag string
+
+	loader         bible.TestamentLoader
+	transliterator bible.Transliterator
+)
+
 func main() {
-	rootCmd.AddCommand(&otCmd)
-	rootCmd.AddCommand(&ntCmd)
+	rootCmd.AddCommand(&oldTestamentCmd)
+	rootCmd.AddCommand(&newTestamentCmd)
 
 	rootCmd.Execute()
 }

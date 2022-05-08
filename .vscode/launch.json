@@ -12,7 +12,9 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/cmd/transliterate",
             "args": [
-                "ot",
+                "old-testament",
+                "--source", "wlc",
+                "--transliterator", "academic",
             ]
         }
     ]
