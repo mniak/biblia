@@ -1,4 +1,4 @@
-package loaders
+package wlc
 
 import (
 	"fmt"
@@ -7,20 +7,25 @@ import (
 
 	"github.com/mniak/biblia/internal/utils"
 	"github.com/mniak/biblia/pkg/bible"
-	"github.com/mniak/biblia/pkg/sources/wlc"
 )
 
-type WLCLoader struct {
+type _Loader struct {
 	Directory string
 }
 
-func (l WLCLoader) Load() (bible.Testament, error) {
-	books, err := utils.MapErr(wlc.BookNames(), func(bookname string) (bible.Book, error) {
+func Loader(dir string) _Loader {
+	return _Loader{
+		Directory: dir,
+	}
+}
+
+func (l _Loader) Load() (bible.Testament, error) {
+	books, err := utils.MapErr(BookNames(), func(bookname string) (bible.Book, error) {
 		bookBytes, err := os.ReadFile(filepath.Join(l.Directory, fmt.Sprintf("%s.xml", bookname)))
 		if err != nil {
 			return bible.Book{}, err
 		}
-		return wlc.ParseBook(bookBytes)
+		return ParseBook(bookBytes)
 	})
 
 	return bible.Testament{

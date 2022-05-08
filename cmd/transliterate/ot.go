@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/mniak/biblia/pkg/exporters"
 	"github.com/mniak/biblia/pkg/hebrew"
-	"github.com/mniak/biblia/pkg/loaders"
+	"github.com/mniak/biblia/pkg/sources/wlc"
 	"github.com/mniak/biblia/pkg/text"
 	"github.com/spf13/cobra"
 )
@@ -16,9 +16,7 @@ var otCmd = cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		transliterator := hebrew.NewAcademicTransliterator()
-		loader := loaders.WLCLoader{
-			Directory: "sources/UnicodeXML_Westminster_Leningrad_Codex/Tanach",
-		}
+		loader := wlc.Loader("sources/UnicodeXML_Westminster_Leningrad_Codex/Tanach")
 
 		testament, err := loader.Load()
 		transliteratedTestament := testament.Transliterate(transliterator)
