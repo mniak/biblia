@@ -9,17 +9,17 @@ import (
 	"github.com/mniak/biblia/pkg/bible"
 )
 
-type _Loader struct {
+type wlcLoader struct {
 	Directory string
 }
 
-func Loader(dir string) _Loader {
-	return _Loader{
+func Loader(dir string) wlcLoader {
+	return wlcLoader{
 		Directory: dir,
 	}
 }
 
-func (l _Loader) Load() (bible.Testament, error) {
+func (l wlcLoader) Load() (bible.Testament, error) {
 	books, err := utils.MapErr(BookNames(), func(bookname string) (bible.Book, error) {
 		bookBytes, err := os.ReadFile(filepath.Join(l.Directory, fmt.Sprintf("%s.xml", bookname)))
 		if err != nil {
