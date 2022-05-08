@@ -6,7 +6,6 @@ import (
 	"github.com/mniak/biblia/pkg/bible"
 	"github.com/mniak/biblia/pkg/hebrew"
 	"github.com/mniak/biblia/pkg/sources/wlc"
-	"github.com/mniak/biblia/pkg/text"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +33,6 @@ var oldTestamentCmd = cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		exporter := text.StdoutExporter()
 		err := bible.LoadTransliterateAndExport(loader, transliterator, exporter)
 		handle(err)
 	},
