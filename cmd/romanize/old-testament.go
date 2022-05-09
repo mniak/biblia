@@ -38,6 +38,6 @@ var oldTestamentCmd = cobra.Command{
 }
 
 func init() {
-	oldTestamentCmd.Flags().StringVarP(&sourceFlag, "source", "s", "wlc", "Source text to use (options: wlc)")
-	oldTestamentCmd.Flags().StringVarP(&romanizerFlag, "romanizer", "t", "academic", "Romanizer to use (options: academic)")
+	oldTestamentCmd.Flags().StringVar(&sourceFlag, "source", "wlc", "Source text to use (options: wlc)")
+	oldTestamentCmd.Flags().StringVar(&romanizerFlag, "romanizer", "academic-hebrew", "Romanizer to use (options: academic)")
 }

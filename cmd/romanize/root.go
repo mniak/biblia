@@ -9,7 +9,7 @@ import (
 )
 
 var rootCmd = cobra.Command{
-	Use: "transliterate",
+	Use: "romanize",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error
 		exporter, err = flagutils.Exporter(exporterFlag, outputDirFlag)
@@ -38,8 +38,8 @@ func main() {
 	rootCmd.AddCommand(&oldTestamentCmd)
 	rootCmd.AddCommand(&newTestamentCmd)
 
-	rootCmd.PersistentFlags().StringVarP(&exporterFlag, "output", "o", "stdout", "The output format/exporter (options: stdout)")
-	rootCmd.PersistentFlags().StringVarP(&outputDirFlag, "output-dir", "d", "./export", "Output directory")
+	rootCmd.PersistentFlags().StringVar(&exporterFlag, "output", "stdout", "The output format/exporter (options: stdout)")
+	rootCmd.PersistentFlags().StringVar(&outputDirFlag, "output-dir", "./export", "Output directory")
 
 	rootCmd.Execute()
 }
