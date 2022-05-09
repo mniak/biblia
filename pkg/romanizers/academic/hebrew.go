@@ -1,4 +1,4 @@
-package hebrew
+package academic
 
 import (
 	"strings"
@@ -6,13 +6,13 @@ import (
 	"github.com/mniak/biblia/internal/runeutils"
 )
 
-type academicTransliterator struct{}
+type HebrewRomanizer struct{}
 
-func AcademicTransliterator() *academicTransliterator {
-	return &academicTransliterator{}
+func NewHebrewRomanizer() *HebrewRomanizer {
+	return &HebrewRomanizer{}
 }
 
-func (t *academicTransliterator) TransliterateWord(word string) string {
+func (t *HebrewRomanizer) RomanizeWord(word string) string {
 	walker := runeutils.ReverseRuneWalker(word)
 	walker.Filter(func(r rune) bool {
 		_, ignored := ignoredSet[r]

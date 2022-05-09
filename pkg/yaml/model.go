@@ -8,6 +8,6 @@ type verseModel struct {
 }
 
 type wordModel struct {
-	Text            string `yaml:"text"`
-	Transliteration string `yaml:"tlit"`
+	Text      string `yaml:"text"`
+	Romanized string `yaml:"roma"`
 }

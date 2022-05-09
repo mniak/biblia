@@ -1,4 +1,4 @@
-package hebrew
+package academic
 
 const (
 	INVALID   = "�"

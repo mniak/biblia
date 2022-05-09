@@ -5,9 +5,9 @@ type Book struct {
 	Chapters []Chapter
 }
 
-func (b Book) Transliterate(t Transliterator) Book {
+func (b Book) Romanize(t Romanizer) Book {
 	for idx, chapter := range b.Chapters {
-		b.Chapters[idx] = chapter.Transliterate(t)
+		b.Chapters[idx] = chapter.Romanize(t)
 	}
 	return b
 }

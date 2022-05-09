@@ -1,4 +1,4 @@
-package hebrew
+package academic
 
 import (
 	"fmt"
@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var _ bible.Transliterator = AcademicTransliterator()
+var _ bible.Romanizer = NewHebrewRomanizer()
 
-func TestAcademic_Simple(t *testing.T) {
+func TestHebrewRomanizer_Samples(t *testing.T) {
 	testData := map[string]string{
 		"בְּרֵאשִׁ֖ית": "b'rēʾšîṯ",
 		"בָּרָ֣א":      "bārāʾ",
@@ -23,11 +23,11 @@ func TestAcademic_Simple(t *testing.T) {
 		"א֑וֹר":        "ʾôr",
 	}
 
-	transliterator := AcademicTransliterator()
+	romanizer := NewHebrewRomanizer()
 
 	for word, expected := range testData {
 		t.Run(fmt.Sprintf("'%s'→'%s'", word, expected), func(t *testing.T) {
-			actual := transliterator.TransliterateWord(word)
+			actual := romanizer.RomanizeWord(word)
 
 			assert.Equal(t, expected, actual)
 		})

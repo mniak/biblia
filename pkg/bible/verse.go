@@ -5,9 +5,9 @@ type Verse struct {
 	Words  []Word
 }
 
-func (b Verse) Transliterate(t Transliterator) Verse {
+func (b Verse) Romanize(t Romanizer) Verse {
 	for idx, word := range b.Words {
-		b.Words[idx].Transliterated = t.TransliterateWord(word.Text)
+		b.Words[idx].Romanized = t.RomanizeWord(word.Text)
 	}
 	return b
 }

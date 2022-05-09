@@ -33,7 +33,7 @@ func (e textExporter) Export(t bible.Testament) error {
 			for _, verse := range chapter.Verses {
 				_, err = e.writer.Printf("%d: ", verse.Number)
 				for _, word := range verse.Words {
-					e.writer.Print(word.Transliterated)
+					e.writer.Print(word.Romanized)
 					e.writer.Print(" ")
 				}
 				if err != nil {

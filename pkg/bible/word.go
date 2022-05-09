@@ -1,6 +1,6 @@
 package bible
 
 type Word struct {
-	Text           string
-	Transliterated string
+	Text      string
+	Romanized string
 }

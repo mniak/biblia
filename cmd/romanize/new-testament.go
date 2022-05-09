@@ -20,5 +20,5 @@ var newTestamentCmd = cobra.Command{
 
 func init() {
 	newTestamentCmd.Flags().StringVarP(&sourceFlag, "source", "s", "-", "Source text to use (options: -)")
-	newTestamentCmd.Flags().StringVarP(&transliteratorFlag, "transliterator", "t", "-", "Transliterator to use (options: -)")
+	newTestamentCmd.Flags().StringVarP(&romanizerFlag, "transliterator", "t", "-", "Transliterator to use (options: -)")
 }

@@ -1,18 +1,12 @@
 package yaml
 
 import (
-	"embed"
-	"fmt"
-	"os"
-	"path/filepath"
-	"strings"
-	"text/template"
+	"io"
 
 	"github.com/mniak/biblia/pkg/bible"
+	"github.com/samber/lo"
+	"gopkg.in/yaml.v3"
 )
-
-//go:embed verse.yaml.tmpl
-var embedfs embed.FS
 
 type yamlExporter struct {
 	directory string
@@ -25,39 +19,20 @@ func NewExporter(directory string) yamlExporter {
 }
 
 func (e yamlExporter) Export(t bible.Testament) error {
-	for _, book := range t.Books {
-		normalizedBookName := strings.ReplaceAll(book.Name, " ", "_")
-		bookdir := filepath.Join(e.directory, normalizedBookName)
-		for _, chapter := range book.Chapters {
-			chapterdir := filepath.Join(bookdir, fmt.Sprintf("%s_%d", normalizedBookName, chapter.Number))
-			err := os.MkdirAll(chapterdir, os.ModePerm)
-			if err != nil {
-				return err
-			}
+	return export(e.directory, t, func(w io.Writer, book bible.Book, chapter bible.Chapter, verse bible.Verse) error {
+		enc := yaml.NewEncoder(w)
+		defer enc.Close()
 
-			for _, verse := range chapter.Verses {
-
-				versepath := filepath.Join(chapterdir, fmt.Sprintf("%s_%d_%d.yaml", normalizedBookName, chapter.Number, verse.Number))
-				w, err := os.Create(versepath)
-				if err != nil {
-					return err
+		return enc.Encode(verseModel{
+			BookName: book.Name,
+			Chapter:  chapter.Number,
+			Verse:    verse.Number,
+			Words: lo.Map(verse.Words, func(w bible.Word, i int) wordModel {
+				return wordModel{
+					Text:      w.Text,
+					Romanized: w.Romanized,
 				}
-				defer w.Close()
-
-				verseTemplate, err := template.ParseFS(embedfs, "verse.yaml.tmpl")
-				if err != nil {
-					return err
-				}
-				err = verseTemplate.Execute(w, map[string]any{
-					"Book":    book,
-					"Chapter": chapter,
-					"Verse":   verse,
-				})
-				if err != nil {
-					return err
-				}
-			}
-		}
-	}
-	return nil
+			}),
+		})
+	})
 }

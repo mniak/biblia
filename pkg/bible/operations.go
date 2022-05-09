@@ -1,14 +1,14 @@
 package bible
 
-// LoadTransliterateAndExport loads a testament, transliterates word by word an then exports the testament
-func LoadTransliterateAndExport(loader TestamentLoader, transliterator Transliterator, exporter Exporter) error {
+// LoadRomanizeAndExport loads a testament, romanizes word by word an then exports the testament
+func LoadRomanizeAndExport(loader TestamentLoader, romanizer Romanizer, exporter Exporter) error {
 	testament, err := loader.Load()
 	if err != nil {
 		return err
 	}
-	transliteratedTestament := testament.Transliterate(transliterator)
+	romanizedTestament := testament.Romanize(romanizer)
 	if err != nil {
 		return err
 	}
-	return exporter.Export(transliteratedTestament)
+	return exporter.Export(romanizedTestament)
 }

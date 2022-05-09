@@ -5,9 +5,9 @@ type Chapter struct {
 	Verses []Verse
 }
 
-func (c Chapter) Transliterate(t Transliterator) Chapter {
+func (c Chapter) Romanize(t Romanizer) Chapter {
 	for idx, verse := range c.Verses {
-		c.Verses[idx] = verse.Transliterate(t)
+		c.Verses[idx] = verse.Romanize(t)
 	}
 	return c
 }
