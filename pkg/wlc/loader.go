@@ -13,7 +13,7 @@ type wlcLoader struct {
 	Directory string
 }
 
-func Loader(dir string) wlcLoader {
+func NewLoader(dir string) wlcLoader {
 	return wlcLoader{
 		Directory: dir,
 	}
