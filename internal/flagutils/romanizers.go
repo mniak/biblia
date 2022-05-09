@@ -10,7 +10,7 @@ import (
 func Romanizers(lang bible.Language) map[string]bible.Romanizer {
 	result := make(map[string]bible.Romanizer)
 	if lang == bible.LangHebrew || lang == bible.LangAny {
-		result["hebrew-academic"] = academic.NewHebrewRomanizer()
+		result["academic-hebrew"] = academic.NewHebrewRomanizer()
 	}
 	if lang == bible.LangGreek || lang == bible.LangAny {
 	}
