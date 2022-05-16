@@ -2,16 +2,16 @@ package parallel
 
 import "sync"
 
-type foridata struct {
+type foridata[T any] struct {
 	i int
-	v any
+	v T
 }
 
-func ForI(initial, exclusiveMax int, fn func(int) (any, error)) ([]any, error) {
+func ForI[T any](initial, exclusiveMax int, fn func(int) (T, error)) ([]T, error) {
 	cherr := make(chan error)
 	defer close(cherr)
 
-	chdata := make(chan foridata)
+	chdata := make(chan foridata[T])
 	defer close(chdata)
 
 	chdone := make(chan bool)
@@ -25,7 +25,7 @@ func ForI(initial, exclusiveMax int, fn func(int) (any, error)) ([]any, error) {
 			if err != nil {
 				cherr <- err
 			}
-			chdata <- foridata{i: i - initial, v: obj}
+			chdata <- foridata[T]{i: i - initial, v: obj}
 			wg.Done()
 		}(i)
 	}
@@ -35,7 +35,7 @@ func ForI(initial, exclusiveMax int, fn func(int) (any, error)) ([]any, error) {
 		chdone <- true
 	}()
 
-	results := make([]any, exclusiveMax-initial)
+	results := make([]T, exclusiveMax-initial)
 	for {
 		select {
 		case data := <-chdata:
