@@ -2,6 +2,7 @@ package biblehub
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -17,23 +18,25 @@ func NewInterlinearOldTestamentLoader() bible.TestamentLoader {
 	return interlinearOTLoader{}
 }
 
-var otBookNames = map[string]int{
-	"genesis": 1,
-}
+func loadOTBook(bookinfo bible.OldTestamentBook) (bible.Book, error) {
+	bookname := mapOTBookName(bookinfo)
+	chapterCount := bookinfo.ChapterCount()
 
-func loadOTBook(bookname string, chapterCount int) (bible.Book, error) {
-	book := bible.Book{
+	result := bible.Book{
 		Name:     bookname,
 		Chapters: make([]bible.Chapter, chapterCount),
 	}
 	for chapterNumber := 1; chapterNumber <= chapterCount; chapterNumber++ {
 		chapter, err := loadOTChapter(bookname, chapterNumber)
 		if err != nil {
-			return book, errors.Wrapf(err, "failed to load chapter %d", chapterNumber)
+			return result, errors.Wrapf(err, "failed to load chapter %d", chapterNumber)
 		}
-		book.Chapters[chapterNumber-1] = chapter
+		if chapter.VerseCount() != bookinfo.VerseCount(chapterNumber) {
+			return result, fmt.Errorf("verse count does not match. expecting %d but has %d", bookinfo.VerseCount(chapterNumber), chapter.VerseCount())
+		}
+		result.Chapters[chapterNumber-1] = chapter
 	}
-	return book, nil
+	return result, nil
 }
 
 type wordEntry struct {
@@ -77,6 +80,7 @@ func composeWordEntries(words ...wordEntry) compositeWordEntry {
 }
 
 func loadOTChapter(bookname string, chapter int) (bible.Chapter, error) {
+	log.Printf("BibleHub Intelinear OT: Fetching book %s chapter %d", bookname, chapter)
 	result := bible.Chapter{
 		Number: chapter,
 		Verses: make([]bible.Verse, 0),
@@ -145,8 +149,8 @@ func loadOTChapter(bookname string, chapter int) (bible.Chapter, error) {
 
 func (l interlinearOTLoader) Load() (bible.Testament, error) {
 	result := bible.Testament{}
-	for bookName, chapterCount := range otBookNames {
-		book, err := loadOTBook(bookName, chapterCount)
+	for _, book := range bible.AllOldTestamentBooks() {
+		book, err := loadOTBook(book)
 		if err != nil {
 			return result, err
 		}
