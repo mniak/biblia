@@ -16,6 +16,19 @@
                 "--source", "wlc",
                 "--transliterator", "academic",
             ]
+        },
+        {
+            "name": "Download Interlinear Hebrew OT",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/cmd/download",
+            "args": [
+                "old-testament",
+                "--source", "biblehubinterlinear-ot",
+                "--output", "./sources/BibleHub_Interlinear_OT",
+            ]
         }
     ]
 }

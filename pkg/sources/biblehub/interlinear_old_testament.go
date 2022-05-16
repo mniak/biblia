@@ -32,11 +32,29 @@ func loadOTBook(bookname string, chapterCount int) (bible.Book, error) {
 	if err != nil {
 		return result, err
 	}
-	// Find the review items
 	doc.Find(".left-content article .post-title").Each(func(i int, s *goquery.Selection) {
 		// For each item found, get the title
 		title := s.Find("a").Text()
 		fmt.Printf("Review %d: %s\n", i, title)
+	})
+	return result, nil
+}
+
+func loadOTChapter(bookname string, chapter int) (bible.Chapter, error) {
+	result := bible.Chapter{}
+	res, err := http.Get(fmt.Sprintf("https://biblehub.com/interlinear/%s/%d.htm", bookname, chapter))
+	if err != nil {
+		return result, err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != 200 {
+		return result, fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
+	}
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return result, err
+	}
+	doc.Find("table.tablefloatheb").Each(func(i int, s *goquery.Selection) {
 	})
 	return result, nil
 }
@@ -50,4 +68,5 @@ func (l interlinearOTLoader) Load() (bible.Testament, error) {
 		}
 		result.Books = append(result.Books, book)
 	}
+	return result, nil
 }
