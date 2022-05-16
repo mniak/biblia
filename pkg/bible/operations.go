@@ -12,3 +12,12 @@ func LoadTransliterateAndExport(loader TestamentLoader, transliterator Translite
 	}
 	return exporter.Export(transliteratedTestament)
 }
+
+// LoadAndExport is useful for converting one format into another
+func LoadAndExport(loader TestamentLoader, exporter Exporter) error {
+	testament, err := loader.Load()
+	if err != nil {
+		return err
+	}
+	return exporter.Export(testament)
+}

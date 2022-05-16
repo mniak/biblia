@@ -8,8 +8,10 @@ import (
 )
 
 func TestLoadOTChapter(t *testing.T) {
-	book, err := loadOTChapter("genesis", 1)
+	chapter, err := loadOTChapter("genesis", 1)
 	require.NoError(t, err)
 
-	assert.NotEmpty(t, book)
+	assert.NotEmpty(t, chapter)
+	assert.Equal(t, 1, chapter.Number)
+	assert.Len(t, chapter.Verses, 1)
 }

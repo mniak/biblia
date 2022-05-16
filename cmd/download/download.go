@@ -3,27 +3,35 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/mniak/biblia/pkg/bible"
+	"github.com/mniak/biblia/pkg/sources/biblehub"
 	"github.com/mniak/biblia/pkg/text"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = cobra.Command{
-	Use: "download",
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		switch exporterFlag {
-		case "stdout":
-			exporter = text.StdoutExporter()
-		case "yaml":
-			exporter = text.YamlExporter(outputDirFlag)
-		default:
-			return fmt.Errorf("invalid exporter: %s", exporterFlag)
+	Use:  "download <testament>",
+	Args: cobra.ExactArgs(1),
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		testament := strings.ToLower(args[0])
+		if testament != "ot" && testament != "nt" {
+			return fmt.Errorf("invalid testament '%s'", args[0])
 		}
-
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		testament := strings.ToLower(args[0])
+		switch testament {
+		case "ot":
+			loader := biblehub.NewInterlinearOldTestamentLoader()
+			exporter := text.StdoutExporter()
+			err := bible.LoadAndExport(loader, exporter)
+			handle(err)
+		case "nt":
+			log.Fatalln("New Testament download not yet implemented")
+		}
 	},
 }
 
@@ -45,8 +53,5 @@ var (
 )
 
 func main() {
-	rootCmd.PersistentFlags().StringVarP(&exporterFlag, "output", "o", "stdout", "The output format/exporter (options: stdout)")
-	rootCmd.PersistentFlags().StringVarP(&outputDirFlag, "dir", "d", "./export", "Output directory")
-
 	rootCmd.Execute()
 }

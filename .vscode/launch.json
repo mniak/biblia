@@ -25,9 +25,7 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/cmd/download",
             "args": [
-                "old-testament",
-                "--source", "biblehubinterlinear-ot",
-                "--output", "./sources/BibleHub_Interlinear_OT",
+                "ot",
             ]
         }
     ]
