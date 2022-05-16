@@ -1,0 +1,30 @@
+package bible
+
+{{with .OldTestament }}
+const (
+	{{- range .Books }}
+	{{ NormalizeIdentifier .Name }} OldTestamentBook = "{{ .Name }}"
+	{{- end }}
+)
+
+func init() {
+	allOtBooks = []OldTestamentBook {
+		{{- range .Books }}
+		{{ NormalizeIdentifier .Name }},
+		{{- end }}
+	}
+	otBooksData = map[OldTestamentBook][]int{
+		{{- range .Books }}
+		{{ NormalizeIdentifier .Name }}: {
+			{{- range $index, $chapter := .Chapters }}
+			{{- if eq $index 0 -}}
+			{{ .VerseCount }}
+			{{- else -}}
+			, {{ .VerseCount }}
+			{{- end }}
+			{{- end -}}
+		},
+		{{- end }}
+	}
+	{{- end }}
+}

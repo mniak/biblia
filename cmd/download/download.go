@@ -23,7 +23,7 @@ var rootCmd = cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		testament := strings.ToLower(args[0])
-		exporter := text.TomlExporter("./sources/BibleHub/Interlinear/OldTestament")
+		exporter := text.NewTomlExporter("./sources/BibleHub/Interlinear/OldTestament")
 
 		switch testament {
 		case "ot":

@@ -4,18 +4,18 @@ import (
 	"github.com/mniak/biblia/pkg/bible"
 )
 
-type writerExporter struct {
-	writer TextWriter
+type WriterExporter struct {
+	Writer TextWriter
 }
 
-func StdoutExporter() writerExporter {
-	return writerExporter{
-		writer: NewIndentedStdout(),
+func StdoutExporter() WriterExporter {
+	return WriterExporter{
+		Writer: NewIndentedStdout(),
 	}
 }
 
-func (e writerExporter) Export(t bible.Testament) error {
-	w := NewIndentedWriter(e.writer)
+func (e WriterExporter) Export(t bible.Testament) error {
+	w := NewIndentedWriter(e.Writer)
 
 	for _, book := range t.Books {
 		_, err := w.Printlnf("Book of %s", book.Name)

@@ -10,17 +10,17 @@ import (
 	"github.com/mniak/biblia/pkg/bible"
 )
 
-type tomlExporter struct {
+type TomlExporter struct {
 	directory string
 }
 
-func TomlExporter(directory string) tomlExporter {
-	return tomlExporter{
+func NewTomlExporter(directory string) TomlExporter {
+	return TomlExporter{
 		directory: directory,
 	}
 }
 
-func (e tomlExporter) Export(t bible.Testament) error {
+func (e TomlExporter) Export(t bible.Testament) error {
 	for _, book := range t.Books {
 		normalizedBookName := strings.ReplaceAll(book.Name, " ", "_")
 		bookdir := filepath.Join(e.directory, normalizedBookName)
@@ -42,15 +42,6 @@ func (e tomlExporter) Export(t bible.Testament) error {
 
 				enc := toml.NewEncoder(w)
 				err = enc.Encode(verse)
-				// verseTemplate, err := template.ParseFS(embedfs, "toml_exporter_verse.tmpl")
-				// if err != nil {
-				// 	return err
-				// }
-				// err = verseTemplate.Execute(w, map[string]any{
-				// 	"Book":    book,
-				// 	"Chapter": chapter,
-				// 	"Verse":   verse,
-				// })
 				if err != nil {
 					return err
 				}

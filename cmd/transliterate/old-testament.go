@@ -18,7 +18,7 @@ var oldTestamentCmd = cobra.Command{
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		switch sourceFlag {
 		case "wlc":
-			loader = wlc.Loader("sources/UnicodeXML_Westminster_Leningrad_Codex/Tanach")
+			loader = wlc.NewLoader(wlc.DefaultDirectory)
 		default:
 			return fmt.Errorf("invalid source: %s", sourceFlag)
 		}

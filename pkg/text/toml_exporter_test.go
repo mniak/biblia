@@ -2,4 +2,4 @@ package text
 
 import "github.com/mniak/biblia/pkg/bible"
 
-var _ bible.Exporter = tomlExporter{}
+var _ bible.Exporter = TomlExporter{}

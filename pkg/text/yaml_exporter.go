@@ -14,20 +14,20 @@ import (
 //go:embed yaml_exporter_verse.tmpl
 var embedfs embed.FS
 
-type yamlExporter struct {
-	directory string
+type YamlExporter struct {
+	Directory string
 }
 
-func YamlExporter(directory string) yamlExporter {
-	return yamlExporter{
-		directory: directory,
+func NewYamlExporter(directory string) YamlExporter {
+	return YamlExporter{
+		Directory: directory,
 	}
 }
 
-func (e yamlExporter) Export(t bible.Testament) error {
+func (e YamlExporter) Export(t bible.Testament) error {
 	for _, book := range t.Books {
 		normalizedBookName := strings.ReplaceAll(book.Name, " ", "_")
-		bookdir := filepath.Join(e.directory, normalizedBookName)
+		bookdir := filepath.Join(e.Directory, normalizedBookName)
 		for _, chapter := range book.Chapters {
 			chapterdir := filepath.Join(bookdir, fmt.Sprintf("%s_%d", normalizedBookName, chapter.Number))
 			err := os.MkdirAll(chapterdir, os.ModePerm)
