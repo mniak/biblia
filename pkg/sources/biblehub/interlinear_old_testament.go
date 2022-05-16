@@ -76,10 +76,6 @@ func composeWordEntries(words ...wordEntry) compositeWordEntry {
 	return result
 }
 
-func trim(text string) string {
-	return strings.Trim(text, " \u00a0")
-}
-
 func loadOTChapter(bookname string, chapter int) (bible.Chapter, error) {
 	result := bible.Chapter{
 		Number: chapter,
@@ -106,12 +102,12 @@ func loadOTChapter(bookname string, chapter int) (bible.Chapter, error) {
 			ChildrenFiltered("td").
 			Each(func(i int, s *goquery.Selection) {
 				var entry wordEntry
-				entry.strongs, _ = strconv.Atoi(trim(s.Find("span.strongs").First().Text()))
-				verseStr := trim(s.Find("span.refheb").First().Text())
+				entry.strongs, _ = strconv.Atoi(normalize(s.Find("span.strongs").First().Text()))
+				verseStr := normalize(s.Find("span.refheb").First().Text())
 				entry.verse, _ = strconv.Atoi(verseStr)
-				entry.hebrew = trim(s.Find("span.hebrew").Text())
-				entry.transliterated = trim(s.Find("span.translit").Text())
-				entry.english = trim(s.Find("span.eng").Text())
+				entry.hebrew = normalize(s.Find("span.hebrew").Text())
+				entry.transliterated = normalize(s.Find("span.translit").Text())
+				entry.english = normalize(s.Find("span.eng").Text())
 
 				entries = append(entries, entry)
 			})
