@@ -13,5 +13,5 @@ func TestLoadOTChapter(t *testing.T) {
 
 	assert.NotEmpty(t, chapter)
 	assert.Equal(t, 1, chapter.Number)
-	assert.Len(t, chapter.Verses, 1)
+	assert.Len(t, chapter.Verses, 31)
 }
