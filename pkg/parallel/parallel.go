@@ -1,6 +1,9 @@
 package parallel
 
-import "sync"
+import (
+	"context"
+	"sync"
+)
 
 type foridata[T any] struct {
 	i int
@@ -8,15 +11,24 @@ type foridata[T any] struct {
 }
 
 func ForI[T any](initial, exclusiveMax int, fn func(int) (T, error)) ([]T, error) {
+	return ForIContext(context.Background(), initial, exclusiveMax, func(ctx context.Context, i int) (T, error) {
+		return fn(i)
+	})
+}
+
+func ForIContext[T any](ctx context.Context, initial, exclusiveMax int, fn func(context.Context, int) (T, error)) ([]T, error) {
 	cherr := make(chan error)
 	chdata := make(chan foridata[T])
 	chdone := make(chan bool)
+
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 
 	var wg sync.WaitGroup
 	for i := initial; i < exclusiveMax; i++ {
 		wg.Add(1)
 		go func(i int) {
-			obj, err := fn(i)
+			obj, err := fn(ctx, i)
 			if err != nil {
 				cherr <- err
 			}

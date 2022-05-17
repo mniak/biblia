@@ -32,7 +32,6 @@ func (e TomlExporter) Export(t bible.Testament) error {
 			}
 
 			for _, verse := range chapter.Verses {
-
 				versepath := filepath.Join(chapterdir, fmt.Sprintf("%s_%d_%d.toml", normalizedBookName, chapter.Number, verse.Number))
 				w, err := os.Create(versepath)
 				if err != nil {

@@ -9,6 +9,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mniak/biblia/pkg/bible"
+	"github.com/mniak/biblia/pkg/parallel"
 	"github.com/pkg/errors"
 )
 
@@ -23,20 +24,20 @@ func loadOTBook(bookinfo bible.OldTestamentBook) (bible.Book, error) {
 	chapterCount := bookinfo.ChapterCount()
 
 	result := bible.Book{
-		Name:     bookname,
-		Chapters: make([]bible.Chapter, chapterCount),
+		Name: bookname,
 	}
-	for chapterNumber := 1; chapterNumber <= chapterCount; chapterNumber++ {
+	var err error
+	result.Chapters, err = parallel.ForI[bible.Chapter](1, chapterCount+1, func(chapterNumber int) (bible.Chapter, error) {
 		chapter, err := loadOTChapter(bookname, chapterNumber)
 		if err != nil {
-			return result, errors.Wrapf(err, "failed to load chapter %d", chapterNumber)
+			return chapter, errors.Wrapf(err, "failed to load chapter %d", chapterNumber)
 		}
 		if chapter.VerseCount() != bookinfo.VerseCount(chapterNumber) {
-			return result, fmt.Errorf("verse count does not match. expecting %d but has %d", bookinfo.VerseCount(chapterNumber), chapter.VerseCount())
+			return chapter, fmt.Errorf("verse count does not match. expecting %d but has %d", bookinfo.VerseCount(chapterNumber), chapter.VerseCount())
 		}
-		result.Chapters[chapterNumber-1] = chapter
-	}
-	return result, nil
+		return chapter, nil
+	})
+	return result, err
 }
 
 type wordEntry struct {
@@ -121,6 +122,10 @@ func loadOTChapter(bookname string, chapter int) (bible.Chapter, error) {
 
 	var currentVerse *bible.Verse
 	for _, entry := range chapterEntries {
+		if entry.verse == nil && len(entry.verse) == 0 {
+			return result, fmt.Errorf("could not determine in which verse we are. book=%s chapter=%d", bookname, chapter)
+		}
+
 		if len(entry.verse) > 0 {
 			if currentVerse != nil {
 				result.Verses = append(result.Verses, *currentVerse)
@@ -141,9 +146,6 @@ func loadOTChapter(bookname string, chapter int) (bible.Chapter, error) {
 		result.Verses = append(result.Verses, *currentVerse)
 	}
 
-	// for _, verse := range result.Verses {
-	// 	fmt.Println(verse.Number, verse.Words)
-	// }
 	return result, nil
 }
 
