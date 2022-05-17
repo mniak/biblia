@@ -11,10 +11,10 @@ import (
 var _ bible.TestamentLoader = interlinearOTLoader{}
 
 func TestLoadOTChapter(t *testing.T) {
-	chapter, err := loadOTChapter("genesis", 1)
+	chapter, err := loadOTChapter("genesis", 32)
 	require.NoError(t, err)
 
 	assert.NotEmpty(t, chapter)
-	assert.Equal(t, 1, chapter.Number)
-	assert.Len(t, chapter.Verses, 31)
+	assert.Equal(t, 32, chapter.Number)
+	assert.Len(t, chapter.Verses, 32)
 }

@@ -32,8 +32,10 @@ func loadOTBook(bookinfo bible.OldTestamentBook) (bible.Book, error) {
 		if err != nil {
 			return chapter, errors.Wrapf(err, "failed to load chapter %d", chapterNumber)
 		}
-		if chapter.VerseCount() != bookinfo.VerseCount(chapterNumber) {
-			return chapter, fmt.Errorf("verse count does not match. expecting %d but has %d", bookinfo.VerseCount(chapterNumber), chapter.VerseCount())
+		infovcount := bookinfo.VerseCount(chapterNumber)
+		cvcount := chapter.VerseCount()
+		if infovcount != cvcount {
+			return chapter, fmt.Errorf("verse count does not match book=%s chapter=%d. expecting %d but has %d", bookname, chapterNumber, infovcount, cvcount)
 		}
 		return chapter, nil
 	})
@@ -122,7 +124,7 @@ func loadOTChapter(bookname string, chapter int) (bible.Chapter, error) {
 
 	var currentVerse *bible.Verse
 	for _, entry := range chapterEntries {
-		if entry.verse == nil && len(entry.verse) == 0 {
+		if currentVerse == nil && len(entry.verse) == 0 {
 			return result, fmt.Errorf("could not determine in which verse we are. book=%s chapter=%d", bookname, chapter)
 		}
 
