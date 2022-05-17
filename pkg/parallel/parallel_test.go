@@ -1,8 +1,11 @@
 package parallel
 
 import (
+	"errors"
 	"testing"
+	"time"
 
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -47,5 +50,21 @@ func TestForI(t *testing.T) {
 		assert.Panics(t, func() {
 			_ = result[10]
 		})
+	})
+}
+
+func TestForI_ConcurrentError(t *testing.T) {
+	t.Run("Raise error", func(t *testing.T) {
+		fakeError := errors.New(gofakeit.SentenceSimple())
+		_, expectedError := ForI(0, 100000, func(i int) (any, error) {
+			if i == 0 {
+				return nil, fakeError
+			} else {
+				time.Sleep(time.Microsecond)
+			}
+			return 0, nil
+		})
+		require.Error(t, expectedError)
+		assert.Equal(t, fakeError, expectedError)
 	})
 }

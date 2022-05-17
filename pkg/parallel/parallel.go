@@ -9,13 +9,8 @@ type foridata[T any] struct {
 
 func ForI[T any](initial, exclusiveMax int, fn func(int) (T, error)) ([]T, error) {
 	cherr := make(chan error)
-	defer close(cherr)
-
 	chdata := make(chan foridata[T])
-	defer close(chdata)
-
 	chdone := make(chan bool)
-	defer close(chdone)
 
 	var wg sync.WaitGroup
 	for i := initial; i < exclusiveMax; i++ {

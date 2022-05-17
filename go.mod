@@ -4,12 +4,13 @@ go 1.18
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
+	github.com/brianvoe/gofakeit/v6 v6.16.0
 	github.com/samber/lo v1.18.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.7.0
 )
 
-require github.com/BurntSushi/toml v1.1.0 // indirect
+require github.com/BurntSushi/toml v1.1.0
 
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
