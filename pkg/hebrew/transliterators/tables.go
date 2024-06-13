@@ -1,60 +1,124 @@
 package transliterators
 
 const (
-	INVALID   = "�"
-	DAGESH    = '\u05bc'
-	QAMATS    = '\u05b8'
-	PATAH     = '\u05b7'
-	SEGOL     = '\u05b6'
-	TSERE     = '\u05b5'
-	HIRIK     = '\u05b4'
-	HOLAM     = '\u05b9'
-	HOLAM_VAV = '\u05ba'
-	QUBUTS    = '\u05bb'
-	SHEVA     = '\u05b0'
+	INVALID = "�"
 )
 
-var basicTable = map[rune]string{
-	'א': "ʾ",
-	'ב': "ḇ",
-	'ג': "ḡ",
-	'ד': "ḏ",
-	'ה': "h",
-	'ו': "w",
-	'ז': "z",
-	'ח': "ḥ",
-	'ט': "ṭ",
-	'י': "y",
-	'כ': "ḵ",
-	'ך': "ḵ",
-	'ל': "l",
-	'מ': "m",
-	'ם': "m",
-	'נ': "n",
-	'ן': "n",
-	'ס': "s",
-	'ע': "ʿ",
-	'פ': "p̄",
-	'ף': "p̄",
-	'צ': "ṣ",
-	'ץ': "ṣ",
-	'ק': "q",
-	'ר': "r",
-	'ש': "š",
-	'ת': "ṯ",
+type Vowel rune
+
+const (
+	SHEVA     Vowel = '\u05b0'
+	HIRIK     Vowel = '\u05b4'
+	TSERE     Vowel = '\u05b5'
+	SEGOL     Vowel = '\u05b6'
+	PATAH     Vowel = '\u05b7'
+	QAMATS    Vowel = '\u05b8'
+	HOLAM     Vowel = '\u05b9'
+	HOLAM_VAV Vowel = '\u05ba'
+	QUBUTS    Vowel = '\u05bb'
+	DAGESH    Vowel = '\u05bc'
+
+	HATAF_SEGOL  Vowel = '\u05b1'
+	HATAF_PATAH  Vowel = '\u05b2'
+	HATAF_QAMATS Vowel = '\u05b3'
+)
+
+var vowels = []Vowel{
+	SHEVA,
+	DAGESH,
+	QAMATS,
+	PATAH,
+	SEGOL,
+	TSERE,
+	HIRIK,
+	HOLAM,
+	HOLAM_VAV,
+	QUBUTS,
+	HATAF_SEGOL,
+	HATAF_PATAH,
+	HATAF_QAMATS,
+}
+
+func basicConvert(r rune) string {
+	switch r {
+	case 'א':
+		return "ʾ"
+	case 'ב':
+		return "ḇ"
+	case 'ג':
+		return "ḡ"
+	case 'ד':
+		return "ḏ"
+	case 'ה':
+		return "h"
+	case 'ו':
+		return "w"
+	case 'ז':
+		return "z"
+	case 'ח':
+		return "ḥ"
+	case 'ט':
+		return "ṭ"
+	case 'י':
+		return "y"
+	case 'כ':
+		return "ḵ"
+	case 'ך':
+		return "ḵ"
+	case 'ל':
+		return "l"
+	case 'מ':
+		return "m"
+	case 'ם':
+		return "m"
+	case 'נ':
+		return "n"
+	case 'ן':
+		return "n"
+	case 'ס':
+		return "s"
+	case 'ע':
+		return "ʿ"
+	case 'פ':
+		return "p̄"
+	case 'ף':
+		return "p̄"
+	case 'צ':
+		return "ṣ"
+	case 'ץ':
+		return "ṣ"
+	case 'ק':
+		return "q"
+	case 'ר':
+		return "r"
+	case 'ש':
+		return "š"
+	case 'ת':
+		return "ṯ"
 
 	// Vowels
-	QAMATS:   "ā",
-	PATAH:    "a",
-	SEGOL:    "e",
-	TSERE:    "ē",
-	HIRIK:    "i",
-	HOLAM:    "o",
-	QUBUTS:   "u",
-	SHEVA:    "'",
-	'\u05b2': "ă", // HATAF_PATAH
-	'\u05b3': "ŏ", // HATAF QAMATS
-	'\u05b1': "ĕ", // HATAF_SEGOL
+	case rune(QAMATS):
+		return "ā"
+	case rune(PATAH):
+		return "a"
+	case rune(SEGOL):
+		return "e"
+	case rune(TSERE):
+		return "ē"
+	case rune(HIRIK):
+		return "i"
+	case rune(HOLAM):
+		return "o"
+	case rune(QUBUTS):
+		return "u"
+	case rune(SHEVA):
+		return "'"
+	case rune(HATAF_SEGOL):
+		return "ĕ"
+	case rune(HATAF_PATAH):
+		return "ă"
+	case rune(HATAF_QAMATS):
+		return "ŏ"
 
 	// Punctuation
 	// Hebrew 		|	Latin
@@ -66,8 +130,12 @@ var basicTable = map[rune]string{
 	// inverted nun	|	bracket
 	// Source: https://en.wikipedia.org/wiki/Hebrew_punctuation
 
-	'\u05bd': ",", // Meteg
-	'\u05be': "-", // Maqaf
+	case '\u05bd':
+		return "," // Meteg
+	case '\u05be':
+		return "-" // Maqaf
+	}
+	return INVALID
 }
 
 var dageshTable = map[rune]string{
@@ -86,17 +154,17 @@ var shinTable = map[rune]string{
 
 var maitresLectionesTable = map[rune]map[rune]string{
 	'ה': {
-		QAMATS: "â",
+		rune(QAMATS): "â",
 	},
 	'י': {
-		TSERE: "ê",
-		SEGOL: "ê",
-		HIRIK: "î",
+		rune(TSERE): "ê",
+		rune(SEGOL): "ê",
+		rune(HIRIK): "î",
 	},
-	HOLAM: {
+	rune(HOLAM): {
 		'ו': "ô",
 	},
-	DAGESH: {
+	rune(DAGESH): {
 		'ו': "û",
 	},
 }

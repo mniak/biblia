@@ -17,7 +17,7 @@ func getLastChar(walker runeutils.RuneWalker) string {
 	}
 
 	// Dagesh
-	if current == DAGESH {
+	if current == rune(DAGESH) {
 		if !walker.Walk() {
 			return INVALID
 		}
@@ -42,11 +42,9 @@ func getLastChar(walker runeutils.RuneWalker) string {
 		return getLastChar(walker) + INVALID
 	}
 
-	if char, ok := basicTable[current]; ok {
+	if char := basicConvert(current); char != INVALID {
 		return char
 	}
 
-	// return string(walker.Rune)
-	// return fmt.Sprintf("<\\u%04x>", walker.Rune)
 	return ""
 }
