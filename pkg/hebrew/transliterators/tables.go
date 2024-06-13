@@ -1,4 +1,4 @@
-package hebrew
+package transliterators
 
 const (
 	INVALID   = "�"

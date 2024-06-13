@@ -34,9 +34,9 @@ var (
 	transliteratorFlag string
 	exporterFlag       string
 
-	loader         bible.TestamentLoader
-	transliterator bible.Transliterator
-	exporter       bible.Exporter
+	loader   bible.TestamentLoader
+	tran     bible.Transliterator
+	exporter bible.Exporter
 )
 
 func main() {

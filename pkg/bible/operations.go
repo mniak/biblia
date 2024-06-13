@@ -7,8 +7,5 @@ func LoadTransliterateAndExport(loader TestamentLoader, transliterator Translite
 		return err
 	}
 	transliteratedTestament := testament.Transliterate(transliterator)
-	if err != nil {
-		return err
-	}
 	return exporter.Export(transliteratedTestament)
 }

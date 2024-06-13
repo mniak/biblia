@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mniak/biblia/pkg/bible"
-	"github.com/mniak/biblia/pkg/hebrew"
+	"github.com/mniak/biblia/pkg/hebrew/transliterators"
 	"github.com/mniak/biblia/pkg/sources/wlc"
 	"github.com/spf13/cobra"
 )
@@ -25,7 +25,9 @@ var oldTestamentCmd = cobra.Command{
 
 		switch transliteratorFlag {
 		case "academic":
-			transliterator = hebrew.AcademicTransliterator()
+			tran = transliterators.Academic()
+		case "phonetic-ptbr":
+			tran = transliterators.PhoneticPTBR()
 		default:
 			return fmt.Errorf("invalid transliterator: %s", transliteratorFlag)
 		}
@@ -33,7 +35,7 @@ var oldTestamentCmd = cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		err := bible.LoadTransliterateAndExport(loader, transliterator, exporter)
+		err := bible.LoadTransliterateAndExport(loader, tran, exporter)
 		handle(err)
 	},
 }
