@@ -4,96 +4,51 @@ const (
 	INVALID = "�"
 )
 
-type Vowel rune
-
-const (
-	SHEVA     Vowel = '\u05b0'
-	HIRIK     Vowel = '\u05b4'
-	TSERE     Vowel = '\u05b5'
-	SEGOL     Vowel = '\u05b6'
-	PATAH     Vowel = '\u05b7'
-	QAMATS    Vowel = '\u05b8'
-	HOLAM     Vowel = '\u05b9'
-	HOLAM_VAV Vowel = '\u05ba'
-	QUBUTS    Vowel = '\u05bb'
-	DAGESH    Vowel = '\u05bc'
-
-	HATAF_SEGOL  Vowel = '\u05b1'
-	HATAF_PATAH  Vowel = '\u05b2'
-	HATAF_QAMATS Vowel = '\u05b3'
-)
-
-var vowels = []Vowel{
-	SHEVA,
-	DAGESH,
-	QAMATS,
-	PATAH,
-	SEGOL,
-	TSERE,
-	HIRIK,
-	HOLAM,
-	HOLAM_VAV,
-	QUBUTS,
-	HATAF_SEGOL,
-	HATAF_PATAH,
-	HATAF_QAMATS,
-}
-
 func basicConvert(r rune) string {
 	switch r {
-	case 'א':
+	case rune(Alef):
 		return "ʾ"
-	case 'ב':
+	case rune(Bet):
 		return "ḇ"
-	case 'ג':
+	case rune(Gimel):
 		return "ḡ"
-	case 'ד':
+	case rune(Dalet):
 		return "ḏ"
-	case 'ה':
+	case rune(He):
 		return "h"
-	case 'ו':
+	case rune(Vav):
 		return "w"
-	case 'ז':
+	case rune(Zayin):
 		return "z"
-	case 'ח':
+	case rune(Het):
 		return "ḥ"
-	case 'ט':
+	case rune(Tet):
 		return "ṭ"
-	case 'י':
+	case rune(Yod):
 		return "y"
-	case 'כ':
+	case rune(Khaf), rune(Khaf_Final):
 		return "ḵ"
-	case 'ך':
-		return "ḵ"
-	case 'ל':
+	case rune(Lamed):
 		return "l"
-	case 'מ':
+	case rune(Mem), rune(Mem_Final):
 		return "m"
-	case 'ם':
-		return "m"
-	case 'נ':
+	case rune(Nun), rune(Nun_Final):
 		return "n"
-	case 'ן':
-		return "n"
-	case 'ס':
+	case rune(Samek):
 		return "s"
-	case 'ע':
+	case rune(Ayin):
 		return "ʿ"
-	case 'פ':
+	case rune(Pe), rune(Pe_Final):
 		return "p̄"
-	case 'ף':
-		return "p̄"
-	case 'צ':
+	case rune(Tsadi), rune(Tsadi_final):
 		return "ṣ"
-	case 'ץ':
-		return "ṣ"
-	case 'ק':
+	case rune(Qof):
 		return "q"
-	case 'ר':
+	case rune(Resh):
 		return "r"
-	case 'ש':
+	case rune(Shin):
 		return "š"
-	case 'ת':
+	case rune(Tav):
 		return "ṯ"
 
 	// Vowels
