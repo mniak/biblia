@@ -1,7 +1,7 @@
 package transliterators
 
 const (
-	INVALID = "�"
+	InvalidChar = '�'
 )
 
 func basicConvert(r rune) string {
@@ -26,21 +26,21 @@ func basicConvert(r rune) string {
 		return "ṭ"
 	case rune(Yod):
 		return "y"
-	case rune(Khaf), rune(Khaf_Final):
+	case rune(Kaf), rune(FinalKaf):
 		return "ḵ"
 	case rune(Lamed):
 		return "l"
-	case rune(Mem), rune(Mem_Final):
+	case rune(Mem), rune(FinalMem):
 		return "m"
-	case rune(Nun), rune(Nun_Final):
+	case rune(Nun), rune(FinalNun):
 		return "n"
-	case rune(Samek):
+	case rune(Samekh):
 		return "s"
 	case rune(Ayin):
 		return "ʿ"
-	case rune(Pe), rune(Pe_Final):
+	case rune(Pe), rune(FinalPe):
 		return "p̄"
-	case rune(Tsadi), rune(Tsadi_final):
+	case rune(Tsadi), rune(FinalTsadi):
 		return "ṣ"
 	case rune(Qof):
 		return "q"
@@ -90,16 +90,16 @@ func basicConvert(r rune) string {
 	case '\u05be':
 		return "-" // Maqaf
 	}
-	return INVALID
+	return string(InvalidChar)
 }
 
-var dageshTable = map[rune]string{
-	'ב': "b",
-	'ג': "g",
-	'ד': "d",
-	'כ': "k",
-	'פ': "p",
-	'ת': "t",
+var dageshTable = map[Letter]string{
+	Bet:   "b",
+	Gimel: "g",
+	Dalet: "d",
+	Kaf:   "k",
+	Pe:    "p",
+	Tav:   "t",
 }
 
 var shinTable = map[rune]string{

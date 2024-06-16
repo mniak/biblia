@@ -19,10 +19,10 @@ func getLastChar(walker runeutils.RuneWalker) string {
 	// Dagesh
 	if current == rune(DAGESH) {
 		if !walker.Walk() {
-			return INVALID
+			return string(InvalidChar)
 		}
 
-		if char, ok := dageshTable[walker.Rune()]; ok {
+		if char, isBegadKephat := dageshTable[Letter(walker.Rune())]; isBegadKephat {
 			return char
 		}
 		char := getLastChar(walker)
@@ -32,17 +32,17 @@ func getLastChar(walker runeutils.RuneWalker) string {
 	// Shin
 	if current == '\u05c2' || current == '\u05c1' {
 		if !walker.Walk() {
-			return INVALID
+			return string(InvalidChar)
 		}
 
 		if walker.Rune() == 'ש' {
 			return shinTable[current]
 		}
 
-		return getLastChar(walker) + INVALID
+		return getLastChar(walker) + string(InvalidChar)
 	}
 
-	if char := basicConvert(current); char != INVALID {
+	if char := basicConvert(current); char != string(InvalidChar) {
 		return char
 	}
 
