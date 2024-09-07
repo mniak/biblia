@@ -34,7 +34,7 @@ var oldTestamentCmd = cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		err := bible.LoadTransliterateAndExport(loader, transliterator, exporter)
-		handle(err)
+		cobra.CheckErr(err)
 	},
 }
 

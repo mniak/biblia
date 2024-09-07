@@ -16,6 +16,19 @@
                 "--source", "wlc",
                 "--transliterator", "academic",
             ]
+        },
+        {
+            "name": "Transliterate Greek NT",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/cmd/transliterate",
+            "args": [
+                "new-testament",
+                "--source", "byzantine",
+                "--transliterator", "noop",
+            ]
         }
     ]
 }
