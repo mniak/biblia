@@ -31,3 +31,21 @@ const (
 	Shin       Letter = 'ש'
 	Tav        Letter = 'ת'
 )
+
+func (l Letter) IsGutural() bool {
+	switch l {
+	case Alef, He, Het, Ayin, Resh:
+		return true
+	default:
+		return false
+	}
+}
+
+func (l Letter) IsBegadKephat() bool {
+	switch l {
+	case Bet, Gimel, Dalet, Kaf, Pe, Tav:
+		return true
+	default:
+		return false
+	}
+}

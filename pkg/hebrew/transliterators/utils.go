@@ -22,14 +22,19 @@ func getLastChar(walker runeutils.RuneWalker) string {
 			return string(InvalidChar)
 		}
 
+		// Dagesh Forte - BeGaD KePhaT (phonetic phenomenon)
 		if char, isBegadKephat := dageshTable[Letter(walker.Rune())]; isBegadKephat {
 			return char
 		}
+
+		// Dagesh Lene - Double
 		char := getLastChar(walker)
 		return char + char
 	}
 
 	// Shin
+	const SinDot = 'a'
+	const ShinDot = 'b'
 	if current == '\u05c2' || current == '\u05c1' {
 		if !walker.Walk() {
 			return string(InvalidChar)
