@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/mniak/biblia/pkg/bible"
 	"github.com/mniak/biblia/pkg/text"
@@ -21,12 +20,6 @@ var rootCmd = cobra.Command{
 
 		return nil
 	},
-}
-
-func handle(err error) {
-	if err != nil {
-		log.Fatalln(err)
-	}
 }
 
 var (

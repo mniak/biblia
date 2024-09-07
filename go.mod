@@ -3,6 +3,7 @@ module github.com/mniak/biblia
 go 1.18
 
 require (
+	github.com/pkg/errors v0.9.1
 	github.com/samber/lo v1.18.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.7.0
