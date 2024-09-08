@@ -15,7 +15,8 @@
                 "old-testament",
                 "--source", "wlc",
                 "--transliterator", "academic",
-            ]
+            ],
+            "console": "integratedTerminal"
         },
         {
             "name": "Transliterate Greek NT",
@@ -27,8 +28,9 @@
             "args": [
                 "new-testament",
                 "--source", "byzantine",
-                "--transliterator", "noop",
-            ]
+                "--transliterator", "simple",
+            ],
+            "console": "integratedTerminal"
         }
     ]
 }

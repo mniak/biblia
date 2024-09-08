@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/mniak/biblia/pkg/bible"
@@ -28,7 +27,6 @@ var newTestamentCmd = cobra.Command{
 		case "noop":
 			transliterator = greek.NoopTransliterator()
 		case "simple":
-			return errors.New("simple transliterator: not yet implemented")
 			transliterator = greek.SimpleTransliterator()
 		default:
 			return fmt.Errorf("invalid transliterator: %s", transliteratorFlag)
