@@ -8,8 +8,17 @@ import (
 )
 
 func TestGetInterlinearChapter(t *testing.T) {
-	ch, err := GetInterlinearChapter("genesis", 1)
-	require.NoError(t, err)
+	t.Run("Daniel 2", func(t *testing.T) {
+		ch, err := GetInterlinearChapter("daniel", 2)
+		require.NoError(t, err)
 
-	assert.Equal(t, "Genesis 1", ch.Title)
+		assert.Equal(t, "Daniel 2", ch.Title)
+	})
+
+	t.Run("Revelation 13", func(t *testing.T) {
+		ch, err := GetInterlinearChapter("revelation", 13)
+		require.NoError(t, err)
+
+		assert.Equal(t, "Revelation 13", ch.Title)
+	})
 }
