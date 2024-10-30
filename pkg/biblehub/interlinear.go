@@ -72,9 +72,9 @@ func GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error)
 			currentVerse.Number = hebrewNumber
 			currentWordNumber = 0
 		})
-		if currentVerse.Number == 49 {
-			fmt.Printf("[%d = %s] ", currentWordNumber, word.English)
-		}
+		// if currentVerse.Number == 49 {
+		// 	fmt.Printf("[%d = %s] ", currentWordNumber, word.English)
+		// }
 		currentVerse.Words = append(currentVerse.Words, word)
 	})
 
