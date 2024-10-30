@@ -9,7 +9,19 @@ import (
 )
 
 type InterlinearChapter struct {
-	Title string
+	Title  string
+	Verses []InterlinearVerse
+}
+
+type InterlinearVerse struct {
+	Transliteration string
+	Words           []InterlinearWord
+}
+type InterlinearWord struct {
+	Strongs         string
+	Transliteration string
+	English         string
+	Hebrew          string
 }
 
 func GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error) {
@@ -30,7 +42,33 @@ func GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error)
 		return result, err
 	}
 
-	topheading := doc.Find("#topheading")
-	result.Title = strings.TrimSpace(topheading.Contents().Eq(1).Text())
+	result.Title = strings.TrimSpace(doc.Find("#topheading").Children().Remove().End().Text())
+	var currentVerse *InterlinearVerse
+	doc.Find(".tablefloatheb > tbody > tr > td").Each(func(i int, s1 *goquery.Selection) {
+		s1c := s1.Children()
+
+		s1c.Find(".refheb").Each(func(i int, s2 *goquery.Selection) {
+			if currentVerse != nil {
+				result.Verses = append(result.Verses, *currentVerse)
+			}
+			currentVerse = new(InterlinearVerse)
+			fmt.Printf("\n\n%s: ", s2.Text())
+		})
+
+		word := InterlinearWord{
+			Strongs:         strings.TrimSpace(s1c.Filter(".strongs").First().Text()),
+			Transliteration: strings.TrimSpace(s1c.Filter(".translit").Text()),
+			English:         strings.TrimSpace(s1c.Filter(".eng").Text()),
+			Hebrew:          strings.TrimSpace(s1c.Filter(".hebrew").Text()),
+		}
+		if word.English != "" {
+			fmt.Print(word.English + " ")
+		}
+		currentVerse.Words = append(currentVerse.Words, word)
+	})
+
+	if currentVerse != nil {
+		result.Verses = append(result.Verses, *currentVerse)
+	}
 	return result, nil
 }
