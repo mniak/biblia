@@ -12,7 +12,16 @@ func TestGetInterlinearChapter_Daniel2(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, "Daniel 2", ch.Title)
-	assert.Len(t, ch.Verses, 49)
+	require.Len(t, ch.Verses, 49)
+
+	v49 := ch.Verses[48]
+	require.Len(t, v49.Words, 30)
+
+	w1 := v49.Words[0]
+	assert.Equal(t, "1841", w1.Strongs)
+	assert.Equal(t, "wə·ḏā·nî·yêl", w1.Transliteration)
+	assert.Equal(t, "וְדָנִיֵּאל֙", w1.Hebrew)
+	assert.Equal(t, "And Daniel", w1.English)
 }
 
 func TestGetInterlinearChapter_Revelation13(t *testing.T) {

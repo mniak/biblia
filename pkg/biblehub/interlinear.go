@@ -62,7 +62,7 @@ func GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error)
 			Hebrew:          strings.TrimSpace(s1c.Filter(".hebrew").Text()),
 		}
 		if word.English != "" {
-			fmt.Print(word.English + " ")
+			fmt.Print(word.Hebrew + " ")
 		}
 		currentVerse.Words = append(currentVerse.Words, word)
 	})
