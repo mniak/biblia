@@ -2,6 +2,7 @@ package biblehub
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -14,14 +15,16 @@ type InterlinearChapter struct {
 }
 
 type InterlinearVerse struct {
-	Transliteration string
-	Words           []InterlinearWord
+	Number int
+	Words  []InterlinearWord
 }
 type InterlinearWord struct {
-	Strongs         string
+	StrongsNumber   string
+	StrongsText     string
 	Transliteration string
 	English         string
 	Hebrew          string
+	Syntax          string
 }
 
 func GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error) {
@@ -44,25 +47,33 @@ func GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error)
 
 	result.Title = strings.TrimSpace(doc.Find("#topheading").Children().Remove().End().Text())
 	var currentVerse *InterlinearVerse
-	doc.Find(".tablefloatheb > tbody > tr > td").Each(func(i int, s1 *goquery.Selection) {
-		s1c := s1.Children()
+	var currentWordNumber int
+	doc.Find(".tablefloatheb > tbody > tr > td").Each(func(i1 int, s1 *goquery.Selection) {
+		spans := s1.Find("span")
+		currentWordNumber++
 
-		s1c.Find(".refheb").Each(func(i int, s2 *goquery.Selection) {
+		var word InterlinearWord
+
+		strongs1 := spans.Filter(".strongs").Find("a").First()
+		// strongs2 := strongs1.Next()
+		word.StrongsNumber = strings.TrimSpace(strongs1.Text())
+		word.StrongsText = sanitizeEnglish(strings.TrimSpace(strongs1.AttrOr("title", "")))
+
+		word.Transliteration = strings.TrimSpace(spans.Filter(".translit").Text())
+		word.English = sanitizeEnglish(strings.TrimSpace(spans.Filter(".eng").Text()))
+		word.Hebrew = strings.TrimSpace(spans.Filter(".hebrew").Text())
+		word.Syntax = strings.TrimSpace(spans.Filter(".strongsnt").Text())
+		spans.Filter(".refheb").First().Each(func(i int, refheb *goquery.Selection) {
 			if currentVerse != nil {
 				result.Verses = append(result.Verses, *currentVerse)
 			}
 			currentVerse = new(InterlinearVerse)
-			fmt.Printf("\n\n%s: ", s2.Text())
+			hebrewNumber, _ := strconv.Atoi(strings.TrimSpace(refheb.Text()))
+			currentVerse.Number = hebrewNumber
+			currentWordNumber = 0
 		})
-
-		word := InterlinearWord{
-			Strongs:         strings.TrimSpace(s1c.Filter(".strongs").First().Text()),
-			Transliteration: strings.TrimSpace(s1c.Filter(".translit").Text()),
-			English:         strings.TrimSpace(s1c.Filter(".eng").Text()),
-			Hebrew:          strings.TrimSpace(s1c.Filter(".hebrew").Text()),
-		}
-		if word.English != "" {
-			fmt.Print(word.Hebrew + " ")
+		if currentVerse.Number == 49 {
+			fmt.Printf("[%d = %s] ", currentWordNumber, word.English)
 		}
 		currentVerse.Words = append(currentVerse.Words, word)
 	})
@@ -71,4 +82,10 @@ func GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error)
 		result.Verses = append(result.Verses, *currentVerse)
 	}
 	return result, nil
+}
+
+func sanitizeEnglish(text string) string {
+	text = strings.ReplaceAll(text, "\u00a0", " ")
+	text = strings.ReplaceAll(text, "<BR>", "\n")
+	return text
 }
