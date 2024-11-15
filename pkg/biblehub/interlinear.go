@@ -27,12 +27,13 @@ type InterlinearVerse struct {
 	Words  []InterlinearWord
 }
 type InterlinearWord struct {
-	StrongsNumber   string
-	StrongsText     string
-	Transliteration string
-	English         string
-	Original        string
-	Syntax          string
+	Original          string
+	Transliteration   string
+	StrongsNumber     string
+	StrongsText       string
+	SyntaxCode        string
+	SyntaxDescription string
+	English           string
 }
 
 func (lang Language) Select(ifHebrew, ifGreek string) string {
@@ -110,14 +111,15 @@ func (ex *_Extractor) GetInterlinearChapter(book string, chapter int) (Interline
 			var word InterlinearWord
 
 			strongs1 := spans.FilterMatcher(strongsSelector).Find("a").First()
-			// strongs2 := strongs1.Next()
 			word.StrongsNumber = text(strongs1)
 			word.StrongsText = sanitizeEnglish(strings.TrimSpace(strongs1.AttrOr("title", "")))
 
 			word.Transliteration = text(spans, ".translit")
 			word.English = sanitizeEnglish(text(spans, ".eng"))
 			word.Original = text(spans, originalSelector)
-			word.Syntax = text(spans, ".strongsnt")
+			strongsnt := spans.Filter(lang.Select(".strongsnt", ".strongsnt2")).Last()
+			word.SyntaxCode = strongsnt.Text()
+			word.SyntaxDescription = strongsnt.Find("a").AttrOr("title", "")
 			spans.Filter(refSelector).
 				First().
 				Each(func(i int, ref *goquery.Selection) {
