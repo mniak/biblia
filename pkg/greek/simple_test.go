@@ -35,7 +35,6 @@ func TestSimple_Examples(t *testing.T) {
 	for word, expected := range testData {
 		t.Run(fmt.Sprintf("'%s'→'%s'", word, expected), func(t *testing.T) {
 			actual := trans.TransliterateWord(word)
-
 			assert.Equal(t, expected, actual)
 		})
 	}

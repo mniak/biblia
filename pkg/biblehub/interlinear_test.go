@@ -3,6 +3,7 @@ package biblehub
 import (
 	"testing"
 
+	"github.com/mniak/biblia/internal/test"
 	"github.com/mniak/biblia/pkg/biblehub/biblehubtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,14 +25,23 @@ func TestGetInterlinearChapter_Daniel2(t *testing.T) {
 	require.Len(t, v49.Words, 30)
 	assert.Equal(t, 49, v49.Number)
 
-	w1 := v49.Words[0]
-	assert.Equal(t, "1841", w1.StrongsNumber)
-	assert.Equal(t, `Strong's Hebrew 1841: Daniel = God is my judge
- 1) the 4th of the greater prophets, taken as hostage in the first deportation to Babylon, because of the gift of God of the interpretation of dreams, he became the 2nd in command of the Babylon empire and lasted through the end of the Babylonian empire and into the Persian empire. His prophecies are the key to the understanding of end time events. Noted for his purity and holiness by contemporary prophet, Ezekiel 
- 1a) also, 'Belteshazzar' ( H01095 or H01096)`, w1.StrongsText)
-	assert.Equal(t, "wə·ḏā·nî·yêl", w1.Transliteration)
-	assert.Equal(t, "וְדָנִיֵּאל֙", w1.Original)
-	assert.Equal(t, "And Daniel", w1.English)
+	firstWord := v49.Words[0]
+	assert.Equal(t, "1841", firstWord.StrongsNumber)
+	test.AssertEqualTrim(t,
+		`Strong's Hebrew 1841: Daniel = God is my judge
+		1) the 4th of the greater prophets, taken as hostage in the first deportation to Babylon, because of the gift of God of the interpretation of dreams, he became the 2nd in command of the Babylon empire and lasted through the end of the Babylonian empire and into the Persian empire. His prophecies are the key to the understanding of end time events. Noted for his purity and holiness by contemporary prophet, Ezekiel 
+		1a) also, 'Belteshazzar' ( H01095 or H01096)`,
+		firstWord.StrongsText)
+	assert.Equal(t, "wə·ḏā·nî·yêl", firstWord.Transliteration)
+	assert.Equal(t, "וְדָנִיֵּאל֙", firstWord.Original)
+	assert.Equal(t, "And Daniel", firstWord.English)
+
+	previousToLastWord := v49.Words[len(v49.Words)-2]
+	assert.Equal(t, "4430", previousToLastWord.StrongsNumber)
+	test.AssertEqualTrim(t, `Strong's Hebrew 4430: 1) king`, previousToLastWord.StrongsText)
+	assert.Equal(t, "mal·kā.", previousToLastWord.Transliteration)
+	assert.Equal(t, "מַלְכָּֽא׃", previousToLastWord.Original)
+	assert.Equal(t, "of king the", previousToLastWord.English)
 }
 
 func TestGetInterlinearChapter_Revelation13(t *testing.T) {
