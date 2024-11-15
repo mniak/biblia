@@ -12,7 +12,6 @@ require (
 	github.com/samber/lo v1.18.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.9.0
-	go.uber.org/mock v0.5.0
 )
 
 require (
