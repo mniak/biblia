@@ -3,13 +3,19 @@ package biblehub
 import (
 	"testing"
 
+	"github.com/mniak/biblia/pkg/biblehub/biblehubtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestGetInterlinearChapter_Daniel2(t *testing.T) {
-	ch, err := GetInterlinearChapter("daniel", 2)
+	ex := _Extractor{
+		Downloader: biblehubtest.FakeDownloader,
+	}
+
+	ch, err := ex.GetInterlinearChapter("daniel", 2)
 	require.NoError(t, err)
+	assert.Equal(t, Hebrew, ch.Language)
 
 	assert.Equal(t, "Daniel 2", ch.Title)
 	require.Len(t, ch.Verses, 49)
@@ -24,13 +30,37 @@ func TestGetInterlinearChapter_Daniel2(t *testing.T) {
  1) the 4th of the greater prophets, taken as hostage in the first deportation to Babylon, because of the gift of God of the interpretation of dreams, he became the 2nd in command of the Babylon empire and lasted through the end of the Babylonian empire and into the Persian empire. His prophecies are the key to the understanding of end time events. Noted for his purity and holiness by contemporary prophet, Ezekiel 
  1a) also, 'Belteshazzar' ( H01095 or H01096)`, w1.StrongsText)
 	assert.Equal(t, "wə·ḏā·nî·yêl", w1.Transliteration)
-	assert.Equal(t, "וְדָנִיֵּאל֙", w1.Hebrew)
+	assert.Equal(t, "וְדָנִיֵּאל֙", w1.Original)
 	assert.Equal(t, "And Daniel", w1.English)
 }
 
 func TestGetInterlinearChapter_Revelation13(t *testing.T) {
-	ch, err := GetInterlinearChapter("revelation", 13)
+	ex := _Extractor{
+		Downloader: biblehubtest.FakeDownloader,
+	}
+
+	ch, err := ex.GetInterlinearChapter("revelation", 13)
 	require.NoError(t, err)
+	assert.Equal(t, Greek, ch.Language)
 
 	assert.Equal(t, "Revelation 13", ch.Title)
+	require.Len(t, ch.Verses, 18)
+
+	v18 := ch.Verses[17]
+	require.Len(t, v18.Words, 23)
+	assert.Equal(t, 18, v18.Number)
+
+	firstWord := v18.Words[0]
+	assert.Equal(t, "5602", firstWord.StrongsNumber)
+	assert.Equal(t, `Strong's Greek 5602: From an adverb form of hode; in this same spot, i.e. Here or hither.`, firstWord.StrongsText)
+	assert.Equal(t, "Hōde", firstWord.Transliteration)
+	assert.Equal(t, "Ὧδε", firstWord.Original)
+	assert.Equal(t, "Here", firstWord.English)
+
+	lastWord := v18.Words[len(v18.Words)-1]
+	assert.Equal(t, "1803", lastWord.StrongsNumber)
+	assert.Equal(t, `Strong's Greek 1803: Six. A primary numeral; six.`, lastWord.StrongsText)
+	assert.Equal(t, "hex", lastWord.Transliteration)
+	assert.Equal(t, "ἕξ", lastWord.Original)
+	assert.Equal(t, "six", lastWord.English)
 }

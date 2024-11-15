@@ -1,17 +1,25 @@
 package biblehub
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/go-resty/resty/v2"
+	"github.com/andybalholm/cascadia"
+)
+
+type Language string
+
+const (
+	Hebrew  Language = "Hebrew"
+	Greek   Language = "Greek"
+	Unknown Language = "Unknown"
 )
 
 type InterlinearChapter struct {
-	Title  string
-	Verses []InterlinearVerse
+	Title    string
+	Verses   []InterlinearVerse
+	Language Language
 }
 
 type InterlinearVerse struct {
@@ -23,65 +31,113 @@ type InterlinearWord struct {
 	StrongsText     string
 	Transliteration string
 	English         string
-	Hebrew          string
+	Original        string
 	Syntax          string
 }
 
-func GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error) {
-	var result InterlinearChapter
-	client := resty.New().SetBaseURL("https://biblehub.com")
-	resp, err := client.R().
-		SetDoNotParseResponse(true).
-		Get(fmt.Sprintf("interlinear/%s/%d.htm", book, chapter))
-	if err != nil {
-		return result, err
+func (lang Language) Select(ifHebrew, ifGreek string) string {
+	switch lang {
+	case Hebrew:
+		return ifHebrew
+	case Greek:
+		return ifGreek
+	default:
+		return ""
 	}
-	if !resp.IsSuccess() {
-		return result, fmt.Errorf("invalid status %d", resp.StatusCode())
+}
+
+func (lang Language) Select2(ifHebrew, ifGreek goquery.Matcher) goquery.Matcher {
+	switch lang {
+	case Hebrew:
+		return ifHebrew
+	case Greek:
+		return ifGreek
+	default:
+		return goquery.Single("~")
+	}
+}
+
+func detectLanguage(doc *goquery.Document) Language {
+	if doc.FindMatcher(goquery.Single(".tablefloatheb")).Length() > 0 {
+		return Hebrew
+	}
+	if doc.FindMatcher(goquery.Single(".tablefloat")).Length() > 0 {
+		return Greek
+	}
+	return Unknown
+}
+
+func text(sel *goquery.Selection, selectors ...string) string {
+	for _, s := range selectors {
+		sel = sel.Filter(s)
+	}
+	return strings.TrimSpace(sel.Text())
+}
+
+func (ex *_Extractor) GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error) {
+	var ch InterlinearChapter
+	body, err := ex.Downloader.GetInterlinearChapter(book, chapter)
+	if err != nil {
+		return ch, err
+	}
+	doc, err := goquery.NewDocumentFromReader(body)
+	if err != nil {
+		return ch, err
 	}
 
-	doc, err := goquery.NewDocumentFromReader(resp.RawBody())
-	if err != nil {
-		return result, err
-	}
-
-	result.Title = strings.TrimSpace(doc.Find("#topheading").Children().Remove().End().Text())
+	ch.Title = strings.TrimSpace(doc.Find("#topheading").Children().Remove().End().Text())
 	var currentVerse *InterlinearVerse
 	var currentWordNumber int
-	doc.Find(".tablefloatheb > tbody > tr > td").Each(func(i1 int, s1 *goquery.Selection) {
-		spans := s1.Find("span")
-		currentWordNumber++
 
-		var word InterlinearWord
+	lang := detectLanguage(doc)
+	ch.Language = lang
 
-		strongs1 := spans.Filter(".strongs").Find("a").First()
-		// strongs2 := strongs1.Next()
-		word.StrongsNumber = strings.TrimSpace(strongs1.Text())
-		word.StrongsText = sanitizeEnglish(strings.TrimSpace(strongs1.AttrOr("title", "")))
+	strongsSelector := lang.Select2(
+		cascadia.MustCompile(".strongs"),
+		cascadia.MustCompile(".pos"),
+	)
+	originalSelector := lang.Select(".hebrew", ".greek")
+	refSelector := lang.Select(".refheb", ".refmain")
 
-		word.Transliteration = strings.TrimSpace(spans.Filter(".translit").Text())
-		word.English = sanitizeEnglish(strings.TrimSpace(spans.Filter(".eng").Text()))
-		word.Hebrew = strings.TrimSpace(spans.Filter(".hebrew").Text())
-		word.Syntax = strings.TrimSpace(spans.Filter(".strongsnt").Text())
-		spans.Filter(".refheb").First().Each(func(i int, refheb *goquery.Selection) {
+	doc.Find(lang.Select(".tablefloatheb", ".tablefloat")).
+		ChildrenFiltered("tbody").
+		ChildrenFiltered("tr").
+		ChildrenFiltered("td").
+		Each(func(i1 int, s1 *goquery.Selection) {
+			spans := s1.Find("span")
+			currentWordNumber++
+
+			var word InterlinearWord
+
+			strongs1 := spans.FilterMatcher(strongsSelector).Find("a").First()
+			// strongs2 := strongs1.Next()
+			word.StrongsNumber = text(strongs1)
+			word.StrongsText = sanitizeEnglish(strings.TrimSpace(strongs1.AttrOr("title", "")))
+
+			word.Transliteration = text(spans, ".translit")
+			word.English = sanitizeEnglish(text(spans, ".eng"))
+			word.Original = text(spans, originalSelector)
+			word.Syntax = text(spans, ".strongsnt")
+			spans.Filter(refSelector).
+				First().
+				Each(func(i int, ref *goquery.Selection) {
+					if currentVerse != nil {
+						ch.Verses = append(ch.Verses, *currentVerse)
+					}
+					currentVerse = new(InterlinearVerse)
+					hebrewNumber, _ := strconv.Atoi(text(ref))
+					currentVerse.Number = hebrewNumber
+					currentWordNumber = 0
+				})
 			if currentVerse != nil {
-				result.Verses = append(result.Verses, *currentVerse)
+				currentVerse.Words = append(currentVerse.Words, word)
 			}
-			currentVerse = new(InterlinearVerse)
-			hebrewNumber, _ := strconv.Atoi(strings.TrimSpace(refheb.Text()))
-			currentVerse.Number = hebrewNumber
-			currentWordNumber = 0
 		})
-		// if currentVerse.Number == 49 {
-		// 	fmt.Printf("[%d = %s] ", currentWordNumber, word.English)
-		// }
-		currentVerse.Words = append(currentVerse.Words, word)
-	})
 
 	if currentVerse != nil {
-		result.Verses = append(result.Verses, *currentVerse)
+		ch.Verses = append(ch.Verses, *currentVerse)
 	}
-	return result, nil
+	return ch, nil
 }
 
 func sanitizeEnglish(text string) string {
