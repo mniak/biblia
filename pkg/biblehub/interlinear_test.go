@@ -1,24 +1,33 @@
-package biblehub
+package biblehub_test
 
 import (
 	"testing"
 
 	"github.com/mniak/biblia/internal/test"
+	"github.com/mniak/biblia/pkg/biblehub"
 	"github.com/mniak/biblia/pkg/biblehub/biblehubtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestGetInterlinearChapter_Daniel2(t *testing.T) {
-	ex := _Extractor{
+	ex := biblehub.Scraper{
 		Downloader: biblehubtest.FakeDownloader,
 	}
 
-	ch, err := ex.GetInterlinearChapter("daniel", 2)
+	ch, err := ex.GetInterlinearChapter(biblehub.ChapterID{
+		Book:    "daniel",
+		Chapter: 2,
+	})
 	require.NoError(t, err)
-	assert.Equal(t, Hebrew, ch.Language)
+	assert.Equal(t, biblehub.Hebrew, ch.Language)
 
 	assert.Equal(t, "Daniel 2", ch.Title)
+	assert.Equal(t, "daniel", ch.Book)
+	assert.Equal(t, 2, ch.Chapter)
+	require.NotNil(t, ch.Next)
+	assert.Equal(t, "daniel", ch.Next.Book)
+	assert.Equal(t, 3, ch.Next.Chapter)
 	require.Len(t, ch.Verses, 49)
 
 	v49 := ch.Verses[48]
@@ -58,15 +67,23 @@ func TestGetInterlinearChapter_Daniel2(t *testing.T) {
 }
 
 func TestGetInterlinearChapter_Revelation13(t *testing.T) {
-	ex := _Extractor{
+	ex := biblehub.Scraper{
 		Downloader: biblehubtest.FakeDownloader,
 	}
 
-	ch, err := ex.GetInterlinearChapter("revelation", 13)
+	ch, err := ex.GetInterlinearChapter(biblehub.ChapterID{
+		Book:    "revelation",
+		Chapter: 13,
+	})
 	require.NoError(t, err)
-	assert.Equal(t, Greek, ch.Language)
+	assert.Equal(t, biblehub.Greek, ch.Language)
 
 	assert.Equal(t, "Revelation 13", ch.Title)
+	assert.Equal(t, "revelation", ch.Book)
+	assert.Equal(t, 13, ch.Chapter)
+	require.NotNil(t, ch.Next)
+	assert.Equal(t, "revelation", ch.Next.Book)
+	assert.Equal(t, 14, ch.Next.Chapter)
 	require.Len(t, ch.Verses, 18)
 
 	v18 := ch.Verses[17]

@@ -1,4 +1,4 @@
-package main
+package transliterate
 
 import (
 	"fmt"
@@ -7,20 +7,6 @@ import (
 	"github.com/mniak/biblia/pkg/text"
 	"github.com/spf13/cobra"
 )
-
-var rootCmd = cobra.Command{
-	Use: "transliterate",
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		switch exporterFlag {
-		case "stdout":
-			exporter = text.StdoutExporter()
-		default:
-			return fmt.Errorf("invalid exporter: %s", exporterFlag)
-		}
-
-		return nil
-	},
-}
 
 var (
 	sourceFlag         string
@@ -32,11 +18,26 @@ var (
 	exporter       bible.Exporter
 )
 
-func main() {
-	rootCmd.AddCommand(&oldTestamentCmd)
-	rootCmd.AddCommand(&newTestamentCmd)
+func Command() *cobra.Command {
 
-	rootCmd.PersistentFlags().StringVarP(&exporterFlag, "exporter", "e", "stdout", "The exporter to use (options: stdout)")
+	var cmd = cobra.Command{
+		Use: "transliterate",
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			switch exporterFlag {
+			case "stdout":
+				exporter = text.StdoutExporter()
+			default:
+				return fmt.Errorf("invalid exporter: %s", exporterFlag)
+			}
 
-	rootCmd.Execute()
+			return nil
+		},
+	}
+
+	cmd.AddCommand(&oldTestamentCmd)
+	cmd.AddCommand(&newTestamentCmd)
+
+	cmd.PersistentFlags().StringVarP(&exporterFlag, "exporter", "e", "stdout", "The exporter to use (options: stdout)")
+
+	return &cmd
 }

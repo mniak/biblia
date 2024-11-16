@@ -4,6 +4,8 @@ import (
 	"embed"
 	"fmt"
 	"io"
+
+	"github.com/mniak/biblia/pkg/biblehub"
 )
 
 //go:embed fake_downloader/*.htm
@@ -13,6 +15,6 @@ const FakeDownloader fakeDownloader = false
 
 type fakeDownloader bool
 
-func (fakeDownloader) GetInterlinearChapter(book string, chapter int) (io.ReadCloser, error) {
-	return fakeDownloaderFS.Open(fmt.Sprintf("fake_downloader/interlinear_%s_%d.htm", book, chapter))
+func (fakeDownloader) GetInterlinearChapter(chapter biblehub.ChapterID) (io.ReadCloser, error) {
+	return fakeDownloaderFS.Open(fmt.Sprintf("fake_downloader/interlinear_%s_%d.htm", chapter.Book, chapter.Chapter))
 }
