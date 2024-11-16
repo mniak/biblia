@@ -19,8 +19,7 @@ var (
 )
 
 func Command() *cobra.Command {
-
-	var cmd = cobra.Command{
+	cmd := cobra.Command{
 		Use: "transliterate",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			switch exporterFlag {

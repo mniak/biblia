@@ -108,7 +108,6 @@ func (ex *Scraper) GetInterlinearChapter(chapter ChapterID) (InterlinearChapter,
 
 		if segments[0] == "" {
 			return ch, errors.New("could not detect next chapter: book name is empty")
-
 		}
 		num, err := strconv.Atoi(segments[1])
 		if err != nil {

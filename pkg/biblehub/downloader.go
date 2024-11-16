@@ -11,12 +11,16 @@ type Downloader interface {
 	GetInterlinearChapter(chapter ChapterID) (io.ReadCloser, error)
 }
 
-type _Downloader struct {
+type WebDownloader struct {
 	BaseURL string
 }
 
-func (_Downloader) GetInterlinearChapter(chapter ChapterID) (io.ReadCloser, error) {
-	client := resty.New().SetBaseURL("https://biblehub.com")
+var DefaultDownloader = WebDownloader{
+	BaseURL: "https://biblehub.com",
+}
+
+func (d WebDownloader) GetInterlinearChapter(chapter ChapterID) (io.ReadCloser, error) {
+	client := resty.New().SetBaseURL(d.BaseURL)
 	resp, err := client.R().
 		SetDoNotParseResponse(true).
 		Get(fmt.Sprintf("interlinear/%s/%d.htm", chapter.Book, chapter.Chapter))
