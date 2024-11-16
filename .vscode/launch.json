@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/cmd/transliterate",
+            "program": "${workspaceFolder}/cmd",
             "args": [
                 "old-testament",
                 "--source", "wlc",
@@ -23,11 +23,23 @@
             "request": "launch",
             "mode": "auto",
             "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/cmd/transliterate",
+            "program": "${workspaceFolder}/cmd",
             "args": [
                 "new-testament",
                 "--source", "byzantine",
                 "--transliterator", "noop",
+            ]
+        },
+        {
+            "name": "BibleHub: download interlinear",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/cmd",
+            "args": [
+                "biblehub", "download-interlinear",
+                "-o", "temp/scraping/biblehub",
             ]
         }
     ]

@@ -1,11 +1,13 @@
 package biblehub
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/andybalholm/cascadia"
+	"github.com/pkg/errors"
 )
 
 type Language string
@@ -16,10 +18,17 @@ const (
 	Unknown Language = "Unknown"
 )
 
+type ChapterID struct {
+	Book    string
+	Chapter int
+}
+
 type InterlinearChapter struct {
+	ChapterID
 	Title    string
 	Verses   []InterlinearVerse
 	Language Language
+	Next     *ChapterID
 }
 
 type InterlinearVerse struct {
@@ -75,9 +84,10 @@ func text(sel *goquery.Selection, selectors ...string) string {
 	return strings.TrimSpace(sel.Text())
 }
 
-func (ex *_Extractor) GetInterlinearChapter(book string, chapter int) (InterlinearChapter, error) {
+func (ex *Scraper) GetInterlinearChapter(chapter ChapterID) (InterlinearChapter, error) {
 	var ch InterlinearChapter
-	body, err := ex.Downloader.GetInterlinearChapter(book, chapter)
+	ch.ChapterID = chapter
+	body, err := ex.Downloader.GetInterlinearChapter(chapter)
 	if err != nil {
 		return ch, err
 	}
@@ -87,6 +97,28 @@ func (ex *_Extractor) GetInterlinearChapter(book string, chapter int) (Interline
 	}
 
 	ch.Title = strings.TrimSpace(doc.Find("#topheading").Children().Remove().End().Text())
+	rightHref := doc.Find("div#right > a").AttrOr("href", "")
+	if rightHref != "" {
+		rightHref, _ = strings.CutPrefix(rightHref, "../")
+		rightHref, _ = strings.CutSuffix(rightHref, ".htm")
+		segments := strings.Split(rightHref, "/")
+		if len(segments) != 2 {
+			return ch, fmt.Errorf("could not detect next chapter: wrong number of sements in the url: %d", len(segments))
+		}
+
+		if segments[0] == "" {
+			return ch, errors.New("could not detect next chapter: book name is empty")
+		}
+		num, err := strconv.Atoi(segments[1])
+		if err != nil {
+			return ch, errors.WithMessage(err, "could not detect next chapter: invalid chapter number")
+		}
+		ch.Next = &ChapterID{
+			Book:    segments[0],
+			Chapter: num,
+		}
+	}
+
 	var currentVerse *InterlinearVerse
 	var currentWordNumber int
 
