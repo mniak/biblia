@@ -21,7 +21,7 @@ func (t *academicTransliterator) TransliterateWord(word string) string {
 
 	resultChars := make([]string, 0)
 	for walker.Walk() {
-		resultChars = append(resultChars, getLastChar(walker))
+		resultChars = append(resultChars, t.getLastChar(walker))
 	}
 
 	var sb strings.Builder
@@ -31,7 +31,7 @@ func (t *academicTransliterator) TransliterateWord(word string) string {
 	return sb.String()
 }
 
-func getLastChar(walker runeutils.RuneWalker) string {
+func (t *academicTransliterator) getLastChar(walker runeutils.RuneWalker) string {
 	current := walker.Rune()
 
 	// Maitres lectiones
@@ -54,7 +54,7 @@ func getLastChar(walker runeutils.RuneWalker) string {
 		if char, ok := dageshTable[walker.Rune()]; ok {
 			return char
 		}
-		char := getLastChar(walker)
+		char := t.getLastChar(walker)
 		return char + char
 	}
 
@@ -68,14 +68,12 @@ func getLastChar(walker runeutils.RuneWalker) string {
 			return shinTable[current]
 		}
 
-		return getLastChar(walker) + INVALID
+		return t.getLastChar(walker) + INVALID
 	}
 
 	if char, ok := basicTable[current]; ok {
 		return char
 	}
 
-	// return string(walker.Rune)
-	// return fmt.Sprintf("<\\u%04x>", walker.Rune)
 	return ""
 }
