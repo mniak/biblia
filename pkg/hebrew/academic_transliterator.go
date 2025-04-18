@@ -34,8 +34,8 @@ func (t *academicTransliterator) TransliterateWord(word string) string {
 func (t *academicTransliterator) getLastChar(walker runeutils.RuneWalker) string {
 	current := walker.Rune()
 
-	// Maitres lectiones
-	if entry, ok := maitresLectionesTable[current]; ok {
+	// Mater Lectionis
+	if entry, ok := materLectionisTable[current]; ok {
 		if walker.Walk() {
 			if char, ok := entry[walker.Rune()]; ok {
 				return char

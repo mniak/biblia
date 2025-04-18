@@ -84,7 +84,7 @@ var shinTable = map[rune]string{
 	'\u05c1': "š",
 }
 
-var maitresLectionesTable = map[rune]map[rune]string{
+var materLectionisTable = map[rune]map[rune]string{
 	'ה': {
 		QAMATS: "â",
 	},
