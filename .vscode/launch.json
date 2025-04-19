@@ -12,9 +12,9 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/cmd",
             "args": [
-                "old-testament",
+                "transliterate", "old-testament",
                 "--source", "wlc",
-                "--transliterator", "portuguese",
+                "--transliterator", "simple",
             ],
             "console": "integratedTerminal"
         },
@@ -26,7 +26,7 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/cmd",
             "args": [
-                "new-testament",
+                "transliterate", "new-testament",
                 "--source", "byzantine",
                 "--transliterator", "simple",
             ],

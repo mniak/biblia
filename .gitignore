@@ -16,4 +16,5 @@
 
 *.exe
 temp/
+.biblia
 .biblia.yaml
