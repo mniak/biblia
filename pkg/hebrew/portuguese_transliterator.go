@@ -6,13 +6,13 @@ import (
 	"github.com/mniak/biblia/pkg/runeutils"
 )
 
-type academicTransliterator struct{}
+type portugueseTransliterator struct{}
 
-func AcademicTransliterator() *academicTransliterator {
-	return &academicTransliterator{}
+func PortugueseTransliterator() *portugueseTransliterator {
+	return &portugueseTransliterator{}
 }
 
-func (t *academicTransliterator) TransliterateWord(word string) string {
+func (t *portugueseTransliterator) TransliterateWord(word string) string {
 	walker := runeutils.NewReverseRuneWalker(word)
 	walker.Filter(func(r rune) bool {
 		_, ignored := ignoredSet[r]
@@ -31,48 +31,48 @@ func (t *academicTransliterator) TransliterateWord(word string) string {
 	return sb.String()
 }
 
-func (t *academicTransliterator) getLastChar(walker runeutils.RuneWalker) string {
+func (t *portugueseTransliterator) getLastChar(walker runeutils.RuneWalker) string {
 	basicTable := map[rune]string{
-		'א': "ʾ",
-		'ב': "ḇ",
-		'ג': "ḡ",
-		'ד': "ḏ",
+		'א': "",
+		'ב': "b",
+		'ג': "g",
+		'ד': "d",
 		'ה': "h",
 		'ו': "w",
 		'ז': "z",
-		'ח': "ḥ",
-		'ט': "ṭ",
+		'ח': "ch",
+		'ט': "t",
 		'י': "y",
-		'כ': "ḵ",
-		'ך': "ḵ",
+		'כ': "kh",
+		'ך': "k",
 		'ל': "l",
 		'מ': "m",
 		'ם': "m",
 		'נ': "n",
 		'ן': "n",
 		'ס': "s",
-		'ע': "ʿ",
-		'פ': "p̄",
-		'ף': "p̄",
-		'צ': "ṣ",
-		'ץ': "ṣ",
+		'ע': "",
+		'פ': "p",
+		'ף': "p",
+		'צ': "ʦ",
+		'ץ': "ts",
 		'ק': "q",
 		'ר': "r",
-		'ש': "š",
-		'ת': "ṯ",
+		'ש': "sh",
+		'ת': "t",
 
 		// Vowels
-		QAMATS:   "ā",
+		QAMATS:   "a",
 		PATAH:    "a",
 		SEGOL:    "e",
-		TSERE:    "ē",
+		TSERE:    "e",
 		HIRIK:    "i",
 		HOLAM:    "o",
 		QUBUTS:   "u",
-		SHEVA:    "'",
-		'\u05b2': "ă", // HATAF_PATAH
-		'\u05b3': "ŏ", // HATAF QAMATS
-		'\u05b1': "ĕ", // HATAF_SEGOL
+		SHEVA:    "ᵉ",
+		'\u05b2': "a", // HATAF_PATAH
+		'\u05b3': "o", // HATAF QAMATS
+		'\u05b1': "e", // HATAF_SEGOL
 
 		// Punctuation
 		// Hebrew 		|	Latin
@@ -84,44 +84,34 @@ func (t *academicTransliterator) getLastChar(walker runeutils.RuneWalker) string
 		// inverted nun	|	bracket
 		// Source: https://en.wikipedia.org/wiki/Hebrew_punctuation
 
-		'\u05bd': ",", // Meteg
-		'\u05be': "-", // Maqaf
-	}
-
-	dageshTable := map[rune]string{
-		'ב': "b",
-		'ג': "g",
-		'ד': "d",
-		'כ': "k",
-		'פ': "p",
-		'ת': "t",
+		// '\u05bd': ",", // Meteg
+		// '\u05be': "-", // Maqaf
 	}
 
 	shinTable := map[rune]string{
-		'\u05c2': "ś",
-		'\u05c1': "š",
-	}
-
-	materLectionisTable := map[rune]map[rune]string{
-		'ה': {
-			QAMATS: "â",
-		},
-		'י': {
-			TSERE: "ê",
-			SEGOL: "ê",
-			HIRIK: "î",
-		},
-		HOLAM: {
-			'ו': "ô",
-		},
-		DAGESH: {
-			'ו': "û",
-		},
+		'\u05c2': "s",
+		'\u05c1': "sh",
 	}
 
 	current := walker.Rune()
 
 	// Mater Lectionis
+	materLectionisTable := map[rune]map[rune]string{
+		'ה': {
+			QAMATS: "a",
+		},
+		'י': {
+			TSERE: "e",
+			SEGOL: "e",
+			HIRIK: "i",
+		},
+		HOLAM: {
+			'ו': "o",
+		},
+		DAGESH: {
+			'ו': "u",
+		},
+	}
 	if entry, ok := materLectionisTable[current]; ok {
 		if walker.Walk() {
 			if char, ok := entry[walker.Rune()]; ok {
@@ -130,19 +120,6 @@ func (t *academicTransliterator) getLastChar(walker runeutils.RuneWalker) string
 
 			walker.WalkBack()
 		}
-	}
-
-	// Dagesh
-	if current == DAGESH {
-		if !walker.Walk() {
-			return INVALID
-		}
-
-		if char, ok := dageshTable[walker.Rune()]; ok {
-			return char
-		}
-		char := t.getLastChar(walker)
-		return char + char
 	}
 
 	// Shin
