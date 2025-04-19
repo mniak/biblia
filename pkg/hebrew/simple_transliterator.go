@@ -6,13 +6,13 @@ import (
 	"github.com/mniak/biblia/pkg/runeutils"
 )
 
-type portugueseTransliterator struct{}
+type simpleTransliterator struct{}
 
-func PortugueseTransliterator() *portugueseTransliterator {
-	return &portugueseTransliterator{}
+func SimpleTransliterator() *simpleTransliterator {
+	return &simpleTransliterator{}
 }
 
-func (t *portugueseTransliterator) TransliterateWord(word string) string {
+func (t *simpleTransliterator) TransliterateWord(word string) string {
 	walker := runeutils.NewReverseRuneWalker(word)
 	walker.Filter(func(r rune) bool {
 		_, ignored := ignoredSet[r]
@@ -31,7 +31,7 @@ func (t *portugueseTransliterator) TransliterateWord(word string) string {
 	return sb.String()
 }
 
-func (t *portugueseTransliterator) getLastChar(walker runeutils.RuneWalker) string {
+func (t *simpleTransliterator) getLastChar(walker runeutils.RuneWalker) string {
 	basicTable := map[rune]string{
 		'א': "",
 		'ב': "b",

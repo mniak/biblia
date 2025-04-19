@@ -14,7 +14,7 @@
             "args": [
                 "old-testament",
                 "--source", "wlc",
-                "--transliterator", "academic",
+                "--transliterator", "portuguese",
             ],
             "console": "integratedTerminal"
         },

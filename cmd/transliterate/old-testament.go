@@ -26,6 +26,8 @@ var oldTestamentCmd = cobra.Command{
 		switch transliteratorFlag {
 		case "academic":
 			transliterator = hebrew.AcademicTransliterator()
+		case "simple":
+			transliterator = hebrew.SimpleTransliterator()
 		default:
 			return fmt.Errorf("invalid transliterator: %s", transliteratorFlag)
 		}
@@ -40,5 +42,5 @@ var oldTestamentCmd = cobra.Command{
 
 func init() {
 	oldTestamentCmd.Flags().StringVarP(&sourceFlag, "source", "s", "wlc", "Source text to use (options: wlc)")
-	oldTestamentCmd.Flags().StringVarP(&transliteratorFlag, "transliterator", "t", "academic", "Transliterator to use (options: academic)")
+	oldTestamentCmd.Flags().StringVarP(&transliteratorFlag, "transliterator", "t", "academic", "Transliterator to use (options: academic, simple)")
 }
