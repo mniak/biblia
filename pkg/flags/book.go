@@ -3,23 +3,15 @@ package flags
 import (
 	"fmt"
 	"strings"
+
+	"github.com/mniak/biblia/pkg/bible"
 )
 
 // BookInfo contains information about a biblical book
 type BookInfo struct {
-	Index     int
-	Code      string
-	Name      string
-	Aliases   []string
-	Testament Testament
+	Code    bible.BookCode
+	Aliases []string
 }
-
-type Testament int
-
-const (
-	OldTestament Testament = iota
-	NewTestament
-)
 
 // BookFlag implements pflag.Value for parsing biblical books
 type BookFlag struct {
@@ -39,7 +31,7 @@ func (f *BookFlag) String() string {
 	if f.selected == nil {
 		return ""
 	}
-	return f.selected.Code
+	return f.selected.Code.String()
 }
 
 // Set implements pflag.Value
@@ -50,13 +42,7 @@ func (f *BookFlag) Set(value string) error {
 		book := &f.books[i]
 
 		// Check by code
-		if strings.ToLower(book.Code) == value {
-			f.selected = book
-			return nil
-		}
-
-		// Check by name
-		if strings.ToLower(book.Name) == value {
+		if strings.ToLower(book.Code.String()) == value {
 			f.selected = book
 			return nil
 		}
