@@ -127,6 +127,40 @@ func (c BookCode) String() string {
 	return string(c)
 }
 
+// BookIndex represents the canonical position of a book (1-based)
+type BookIndex int
+
+// Index returns the 1-based canonical index of the book (1 = Genesis, 66 = Revelation)
+// Returns 0 if the book code is not recognized
+func (c BookCode) Index() BookIndex {
+	for i, book := range AllBooks() {
+		if book == c {
+			return BookIndex(i + 1)
+		}
+	}
+	return 0
+}
+
+// BookCode returns the BookCode for this index
+// Returns empty string if the index is out of range
+func (idx BookIndex) BookCode() BookCode {
+	books := AllBooks()
+	if idx < 1 || int(idx) > len(books) {
+		return ""
+	}
+	return books[idx-1]
+}
+
+// Name returns the full English name of the book at this index
+func (idx BookIndex) Name() string {
+	return idx.BookCode().Name()
+}
+
+// String returns the UBS code for this index
+func (idx BookIndex) String() string {
+	return idx.BookCode().String()
+}
+
 // Name returns the full English name of the book
 func (c BookCode) Name() string {
 	names := map[BookCode]string{
