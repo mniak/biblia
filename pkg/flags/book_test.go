@@ -3,36 +3,43 @@ package flags
 import (
 	"testing"
 
+	"github.com/mniak/biblia/pkg/bible"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestBookFlag_Set(t *testing.T) {
-	books := []BookInfo{
-		{Index: 0, Code: "GEN", Name: "Genesis", Aliases: []string{"Gn", "Gen"}, Testament: OldTestament},
-		{Index: 1, Code: "EXO", Name: "Exodus", Aliases: []string{"Ex", "Exod"}, Testament: OldTestament},
-		{Index: 39, Code: "MAT", Name: "Matthew", Aliases: []string{"Mt", "Matt"}, Testament: NewTestament},
+	aliases := map[string]bible.BookCode{
+		"Gn":      bible.Genesis,
+		"Gen":     bible.Genesis,
+		"Genesis": bible.Genesis,
+		"Ex":      bible.Exodus,
+		"Exod":    bible.Exodus,
+		"Exodus":  bible.Exodus,
+		"Mt":      bible.Matthew,
+		"Matt":    bible.Matthew,
+		"Matthew": bible.Matthew,
 	}
 
 	tests := []struct {
 		name     string
 		input    string
-		wantCode string
+		wantCode bible.BookCode
 		wantErr  bool
 	}{
-		{name: "by code uppercase", input: "GEN", wantCode: "GEN"},
-		{name: "by code lowercase", input: "gen", wantCode: "GEN"},
-		{name: "by name", input: "Genesis", wantCode: "GEN"},
-		{name: "by name case insensitive", input: "GENESIS", wantCode: "GEN"},
-		{name: "by alias", input: "Gn", wantCode: "GEN"},
-		{name: "by alias case insensitive", input: "gn", wantCode: "GEN"},
-		{name: "by another alias", input: "Mt", wantCode: "MAT"},
+		{name: "by code uppercase", input: "GEN", wantCode: bible.Genesis},
+		{name: "by code lowercase", input: "gen", wantCode: bible.Genesis},
+		{name: "by name", input: "Genesis", wantCode: bible.Genesis},
+		{name: "by name case insensitive", input: "GENESIS", wantCode: bible.Genesis},
+		{name: "by alias", input: "Gn", wantCode: bible.Genesis},
+		{name: "by alias case insensitive", input: "gn", wantCode: bible.Genesis},
+		{name: "by another alias", input: "Mt", wantCode: bible.Matthew},
 		{name: "unknown book", input: "Unknown", wantErr: true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			flag := NewBookFlag(books)
+			flag := NewBookFlag(aliases)
 			err := flag.Set(tt.input)
 
 			if tt.wantErr {
@@ -41,23 +48,23 @@ func TestBookFlag_Set(t *testing.T) {
 			}
 
 			require.NoError(t, err)
-			assert.Equal(t, tt.wantCode, flag.Value().Code)
+			assert.Equal(t, tt.wantCode, flag.Value())
 		})
 	}
 }
 
 func TestBookFlag_String(t *testing.T) {
-	books := []BookInfo{
-		{Index: 0, Code: "GEN", Name: "Genesis", Aliases: []string{"Gn"}, Testament: OldTestament},
+	aliases := map[string]bible.BookCode{
+		"Genesis": bible.Genesis,
 	}
 
 	t.Run("empty when not set", func(t *testing.T) {
-		flag := NewBookFlag(books)
+		flag := NewBookFlag(aliases)
 		assert.Equal(t, "", flag.String())
 	})
 
 	t.Run("returns code when set", func(t *testing.T) {
-		flag := NewBookFlag(books)
+		flag := NewBookFlag(aliases)
 		_ = flag.Set("Genesis")
 		assert.Equal(t, "GEN", flag.String())
 	})
@@ -69,17 +76,17 @@ func TestBookFlag_Type(t *testing.T) {
 }
 
 func TestBookFlag_IsSet(t *testing.T) {
-	books := []BookInfo{
-		{Index: 0, Code: "GEN", Name: "Genesis", Testament: OldTestament},
+	aliases := map[string]bible.BookCode{
+		"Genesis": bible.Genesis,
 	}
 
 	t.Run("false when not set", func(t *testing.T) {
-		flag := NewBookFlag(books)
+		flag := NewBookFlag(aliases)
 		assert.False(t, flag.IsSet())
 	})
 
 	t.Run("true when set", func(t *testing.T) {
-		flag := NewBookFlag(books)
+		flag := NewBookFlag(aliases)
 		_ = flag.Set("Genesis")
 		assert.True(t, flag.IsSet())
 	})

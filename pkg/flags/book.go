@@ -1,76 +1,40 @@
 package flags
 
 import (
-	"fmt"
-	"strings"
-)
-
-// BookInfo contains information about a biblical book
-type BookInfo struct {
-	Index     int
-	Code      string
-	Name      string
-	Aliases   []string
-	Testament Testament
-}
-
-type Testament int
-
-const (
-	OldTestament Testament = iota
-	NewTestament
+	"github.com/mniak/biblia/pkg/bible"
 )
 
 // BookFlag implements pflag.Value for parsing biblical books
 type BookFlag struct {
-	books    []BookInfo
-	selected *BookInfo
+	value   bible.BookCode
+	aliases map[string]bible.BookCode
+	isSet   bool
 }
 
-// NewBookFlag creates a new BookFlag with the given book definitions
-func NewBookFlag(books []BookInfo) *BookFlag {
+// NewBookFlag creates a new BookFlag with the given aliases
+func NewBookFlag(aliases map[string]bible.BookCode) *BookFlag {
 	return &BookFlag{
-		books: books,
+		aliases: aliases,
 	}
 }
 
 // String implements pflag.Value
 func (f *BookFlag) String() string {
-	if f.selected == nil {
+	if !f.isSet {
 		return ""
 	}
-	return f.selected.Code
+	return f.value.String()
 }
 
 // Set implements pflag.Value
 func (f *BookFlag) Set(value string) error {
-	value = strings.ToLower(strings.TrimSpace(value))
-
-	for i := range f.books {
-		book := &f.books[i]
-
-		// Check by code
-		if strings.ToLower(book.Code) == value {
-			f.selected = book
-			return nil
-		}
-
-		// Check by name
-		if strings.ToLower(book.Name) == value {
-			f.selected = book
-			return nil
-		}
-
-		// Check by aliases
-		for _, alias := range book.Aliases {
-			if strings.ToLower(alias) == value {
-				f.selected = book
-				return nil
-			}
-		}
+	code, err := bible.ParseBookCode(value, f.aliases)
+	if err != nil {
+		return err
 	}
-
-	return fmt.Errorf("unknown book: %s", value)
+	f.value = code
+	f.isSet = true
+	return nil
 }
 
 // Type implements pflag.Value
@@ -78,12 +42,12 @@ func (f *BookFlag) Type() string {
 	return "book"
 }
 
-// Value returns the selected book, or nil if none selected
-func (f *BookFlag) Value() *BookInfo {
-	return f.selected
+// Value returns the parsed BookCode
+func (f *BookFlag) Value() bible.BookCode {
+	return f.value
 }
 
-// IsSet returns true if a book has been selected
+// IsSet returns true if a value has been set
 func (f *BookFlag) IsSet() bool {
-	return f.selected != nil
+	return f.isSet
 }
